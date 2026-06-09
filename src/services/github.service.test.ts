@@ -85,6 +85,35 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("rateLimited")
 	})
 
+	it("treats a 403 with remaining quota as unexpected, not rate-limited", async () => {
+		server.use(
+			http.get(
+				endpoint,
+				() => new HttpResponse(null, { status: 403, headers: { "x-ratelimit-remaining": "42" } }),
+			),
+		)
+
+		const result = await GithubService.searchRepositories("react")
+
+		expect(result.kind === "error" && result.error.kind).toBe("unexpected")
+	})
+
+	it("maps a 429 to rateLimited", async () => {
+		server.use(http.get(endpoint, () => new HttpResponse(null, { status: 429 })))
+
+		const result = await GithubService.searchRepositories("react")
+
+		expect(result.kind === "error" && result.error.kind).toBe("rateLimited")
+	})
+
+	it("maps a 5xx to unexpected", async () => {
+		server.use(http.get(endpoint, () => new HttpResponse(null, { status: 503 })))
+
+		const result = await GithubService.searchRepositories("react")
+
+		expect(result.kind === "error" && result.error.kind).toBe("unexpected")
+	})
+
 	it("maps 422 to invalidQuery", async () => {
 		server.use(http.get(endpoint, () => new HttpResponse(null, { status: 422 })))
 
