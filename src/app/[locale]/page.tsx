@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { SearchBar } from "@/features/search/components/search-bar"
 import { SearchPrompt } from "@/features/search/components/search-prompt"
 import { SearchResults } from "@/features/search/components/search-results"
-import { SearchResultsSkeleton } from "@/features/search/components/search-results.skeleton"
+import { SearchResultsSkeleton } from "@/features/search/components/search-results-list"
 
 export default async function SearchPage(props: { searchParams: Promise<{ q?: string }> }) {
 	const { q } = await props.searchParams

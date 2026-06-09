@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 import { makeRepositorySummary } from "@/models/repository.fixture"
-import { SearchResultsList } from "./search-results-list"
+import { SearchResultsList, SearchResultsSkeleton } from "./search-results-list"
 
 const react = makeRepositorySummary()
 
@@ -40,4 +40,8 @@ export const Default: Story = {}
 
 export const SingleResult: Story = {
 	args: { totalCount: 1, items: [react] },
+}
+
+export const Skeleton: Story = {
+	render: () => <SearchResultsSkeleton />,
 }
