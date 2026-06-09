@@ -10,7 +10,8 @@
 		"fmt": "biome check --write",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"test:e2e": "playwright test"
 	},
 	"dependencies": {
 		"class-variance-authority": "^0.7.1",
@@ -25,6 +26,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",
 		"@milkyskies/biome-config": "^0.1.2",
+		"@playwright/test": "^1.60.0",
 		"@tailwindcss/postcss": "^4",
 		"@testing-library/dom": "^10.4.1",
 		"@testing-library/jest-dom": "^6.9.1",
