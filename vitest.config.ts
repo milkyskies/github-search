@@ -7,7 +7,6 @@ export default defineConfig({
 	test: {
 		environment: "jsdom",
 		setupFiles: ["./tests/setup.ts"],
-		// Playwright owns tests/e2e; keep Vitest out so the two runners do not collide.
 		exclude: [...configDefaults.exclude, "tests/e2e/**"],
 	},
 })

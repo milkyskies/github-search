@@ -2,6 +2,11 @@
 	"$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
 	"extends": ["@milkyskies/biome-config/biome.json"],
 	"plugins": ["./node_modules/@milkyskies/biome-config/plugins/no-as-cast.grit"],
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
 	"files": {
 		"includes": [
 			"!**/node_modules",
@@ -10,7 +15,9 @@
 			"!**/dist",
 			"!**/build",
 			"!**/coverage",
-			"!**/.storybook-static",
+			"!**/playwright-report",
+			"!**/test-results",
+			"!**/storybook-static",
 			"!**/*.gen.ts"
 		]
 	}
