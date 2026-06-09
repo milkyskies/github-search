@@ -1,59 +1,54 @@
-# Search
+# 検索 (Search)
 
-Search GitHub repositories by keyword and browse the results. Scenarios below carry stable `SEARCH-NNN` codes. `[x]` = an automated test exists; `Automated:` links to it.
+キーワードで GitHub のリポジトリを検索し、結果を閲覧する機能。各シナリオには言語非依存の安定コード `SEARCH-NNN` を付与する。`[x]` は自動テストが存在することを示し、`Automated:` がそのテストへのリンク。ヘルパー単位のユニットテスト（HTTP ラッパー、サービスのマッピング、ビューステートの変換、カード）はユーザー視点のシナリオではないため、ここには載せず各ソースの隣に置く。
 
-## Search interaction (e2e)
+## 検索を実行する
 
-- [x] **[SEARCH-001]** Enter submits the query
-  - Given: the search page
-  - When: the user types `react` and presses Enter
-  - Then: the URL becomes `…?q=react`
+- [x] **[SEARCH-001]** Enter キーで検索できる
+  - 前提: 検索ページを開いている
+  - 操作: `react` と入力して Enter を押す
+  - 期待: `react` の検索結果が表示される（クエリが URL に `?q=react` として乗る）
   - Automated: `tests/e2e/search.spec.ts`
 
-- [x] **[SEARCH-002]** The Search button submits the query
-  - Given: the search page
-  - When: the user types `vue` and clicks Search
-  - Then: the URL becomes `…?q=vue`
+- [x] **[SEARCH-002]** 検索ボタンで検索できる
+  - 前提: 検索ページを開いている
+  - 操作: `vue` と入力して検索ボタンを押す
+  - 期待: `vue` の検索結果が表示される
   - Automated: `tests/e2e/search.spec.ts`
 
-- [x] **[SEARCH-003]** Clearing the box removes the query
-  - Given: the page at `?q=react`
-  - When: the user empties the box and submits
-  - Then: the query is removed from the URL
+- [x] **[SEARCH-003]** 検索欄を空にすると最初の状態に戻る
+  - 前提: `react` の検索結果が表示されている
+  - 操作: 検索欄を空にして送信する
+  - 期待: クエリが消え、最初の案内表示に戻る
   - Automated: `tests/e2e/search.spec.ts`
 
-## Search service (unit, MSW-mocked GitHub)
+## 結果を見る
 
-- [x] **[SEARCH-010]** Success returns parsed repositories — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-011]** Nullable wire fields (`description`/`language`) map to `undefined` — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-012]** Primary rate limit (`403` + `x-ratelimit-remaining: 0`) → `rateLimited` — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-013]** Secondary rate limit (`403` + `Retry-After`) → `rateLimited` — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-014]** `403` with remaining quota → `unexpected` (boundary) — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-015]** `429` → `rateLimited` — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-016]** `5xx` → `unexpected` — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-017]** `422` → `invalidQuery` — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-018]** Malformed response → `parse` — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-019]** Works unauthenticated (no `Authorization` header without a token) — `Automated: src/services/github.service.test.ts`
-- [x] **[SEARCH-020]** Sends `Authorization: Bearer …` when `GITHUB_TOKEN` is set — `Automated: src/services/github.service.test.ts`
+- [ ] **[SEARCH-004]** 検索前は検索を促す案内が出る
+  - 前提: クエリが無い状態のページ
+  - 操作: ページを開く
+  - 期待: 検索を促す案内が表示される（結果もエラーも出ない）
 
-## HTTP wrapper (unit, MSW-mocked)
+- [ ] **[SEARCH-005]** 一致する検索でリポジトリ一覧が出る
+  - 前提: リポジトリに一致するクエリ
+  - 操作: 検索が完了する
+  - 期待: 件数と、リポジトリごとのカード（所有者アイコン・名前・言語・スター数）が表示される
+  - Automated: （モック GitHub サーバー待ち、glb #8）
 
-- [x] **[SEARCH-021]** Valid response parses to `ok{data,headers}` — `Automated: src/lib/http.test.ts`
-- [x] **[SEARCH-022]** Non-2xx → `status` error with headers — `Automated: src/lib/http.test.ts`
-- [x] **[SEARCH-023]** Unexpected shape → `parse` error — `Automated: src/lib/http.test.ts`
-- [x] **[SEARCH-024]** Request failure → `network` error — `Automated: src/lib/http.test.ts`
-- [x] **[SEARCH-025]** Slow response → `timeout` error — `Automated: src/lib/http.test.ts`
-- [x] **[SEARCH-026]** Non-JSON body → `invalidBody` error — `Automated: src/lib/http.test.ts`
+- [ ] **[SEARCH-006]** 一致が無いと空の状態が出る
+  - 前提: 何も一致しないクエリ
+  - 操作: 検索が完了する
+  - 期待: クエリ名を含む「リポジトリが見つかりません」のメッセージが表示される
+  - Automated: （glb #8 待ち）
 
-## Result card (unit)
+- [ ] **[SEARCH-007]** レート制限時は分かりやすいエラーが出る
+  - 前提: GitHub がレート制限のレスポンスを返す
+  - 操作: ユーザーが検索する
+  - 期待: 結果の代わりにレート制限のメッセージが表示される
+  - Automated: （glb #8 待ち）
 
-- [x] **[SEARCH-030]** Renders the full name and links to the detail page — `Automated: src/features/search/components/repo-card.test.tsx`
-- [x] **[SEARCH-031]** Formats the star count compactly (`228000 → 228K`) — `Automated: src/features/search/components/repo-card.test.tsx`
-- [x] **[SEARCH-032]** Omits language when absent — `Automated: src/features/search/components/repo-card.test.tsx`
-
-## Pending (UI — needs `SearchResults` + the mock GitHub server, glb #8)
-
-- [ ] **[SEARCH-040]** A query renders a list of result cards
-- [ ] **[SEARCH-041]** Zero results shows the empty state
-- [ ] **[SEARCH-042]** A rate-limit error shows the rate-limit state (with reset time)
-- [ ] **[SEARCH-043]** Infinite scroll loads the next page (and stops at GitHub's 1000-result cap)
+- [ ] **[SEARCH-008]** スクロールで続きが読み込まれる
+  - 前提: 複数ページ分の結果があるクエリ
+  - 操作: 一覧の末尾までスクロールする
+  - 期待: 次のページが追加され、GitHub の上限 1000 件で停止する
+  - Automated: （glb #8・#10 待ち）

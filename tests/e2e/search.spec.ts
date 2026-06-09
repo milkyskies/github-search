@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test"
 
-test.use({ locale: "en-US" })
+test.use({ locale: "ja-JP" })
 
-test("pressing Enter puts the query in the URL", async ({ page }) => {
-	await page.goto("/en")
+test("Enterキーで検索を実行するとクエリがURLに入る", async ({ page }) => {
+	await page.goto("/ja")
 
 	await page.getByRole("searchbox").fill("react")
 	await page.getByRole("searchbox").press("Enter")
@@ -11,20 +11,20 @@ test("pressing Enter puts the query in the URL", async ({ page }) => {
 	await expect(page).toHaveURL(/[?&]q=react/)
 })
 
-test("clicking Search puts the query in the URL", async ({ page }) => {
-	await page.goto("/en")
+test("検索ボタンで検索を実行するとクエリがURLに入る", async ({ page }) => {
+	await page.goto("/ja")
 
 	await page.getByRole("searchbox").fill("vue")
-	await page.getByRole("button", { name: "Search" }).click()
+	await page.getByRole("button", { name: "検索" }).click()
 
 	await expect(page).toHaveURL(/[?&]q=vue/)
 })
 
-test("submitting an empty box clears the query", async ({ page }) => {
-	await page.goto("/en?q=react")
+test("検索欄を空にして送信するとクエリが消える", async ({ page }) => {
+	await page.goto("/ja?q=react")
 
 	await page.getByRole("searchbox").fill("")
 	await page.getByRole("searchbox").press("Enter")
 
-	await expect(page).toHaveURL(/\/en$/)
+	await expect(page).toHaveURL(/\/ja$/)
 })
