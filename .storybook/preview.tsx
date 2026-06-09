@@ -1,6 +1,14 @@
 import { withThemeByClassName } from "@storybook/addon-themes"
-import type { Preview } from "@storybook/nextjs-vite"
+import type { Decorator, Preview } from "@storybook/nextjs-vite"
+import { NextIntlClientProvider } from "next-intl"
+import messages from "../messages/en.json"
 import "../src/app/globals.css"
+
+const withIntl: Decorator = (Story) => (
+	<NextIntlClientProvider locale="en" messages={messages}>
+		<Story />
+	</NextIntlClientProvider>
+)
 
 const preview: Preview = {
 	parameters: {
@@ -15,6 +23,7 @@ const preview: Preview = {
 		},
 	},
 	decorators: [
+		withIntl,
 		withThemeByClassName({
 			themes: { light: "", dark: "dark" },
 			defaultTheme: "light",
