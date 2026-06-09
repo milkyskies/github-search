@@ -1,6 +1,8 @@
 import type { NextConfig } from "next"
 import createNextIntlPlugin from "next-intl/plugin"
 
+const isDev = process.env.NODE_ENV !== "production"
+
 const contentSecurityPolicy = [
 	"default-src 'self'",
 	"base-uri 'self'",
@@ -10,7 +12,7 @@ const contentSecurityPolicy = [
 	"img-src 'self' https://avatars.githubusercontent.com data:",
 	"font-src 'self' data:",
 	"style-src 'self' 'unsafe-inline'",
-	"script-src 'self' 'unsafe-inline'",
+	`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
 	"connect-src 'self' https://api.github.com",
 ].join("; ")
 
