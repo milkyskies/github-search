@@ -5,6 +5,15 @@
 	},
 	"search": {
 		"placeholder": "リポジトリを検索",
-		"button": "検索"
+		"button": "検索",
+		"prompt": "リポジトリを検索してみましょう。",
+		"results": "{count}件のリポジトリ",
+		"empty": "「{query}」に一致するリポジトリはありません。",
+		"error": {
+			"rateLimited": "GitHub のレート制限に達しました。しばらくしてからお試しください。",
+			"network": "GitHub に接続できませんでした。接続を確認して再度お試しください。",
+			"invalidQuery": "検索クエリが正しくありません。",
+			"generic": "問題が発生しました。再度お試しください。"
+		}
 	}
 }
