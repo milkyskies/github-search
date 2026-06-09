@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 1d-kadai — GitHub Repository Search
 
-## Getting Started
+Search GitHub repositories, browse the results, and open a repository's detail page (owner, language, stars, watchers, forks, issues). Built with Next.js 16 (App Router).
 
-First, run the development server:
+This repository ships the **same app in two editions** — see [Two editions](#two-editions).
+
+## Stack
+
+- **Next.js 16** (App Router, Turbopack, React Server Components)
+- **TypeScript**, **Tailwind CSS v4**, **Base UI** (unstyled primitives)
+- **next-intl** — routed `ja` / `en` internationalization
+- **next-themes** — light / dark / system
+- **Biome** (lint + format), **Vitest** + Testing Library + MSW (unit), **Playwright** (e2e), **Storybook** (component workshop)
+- **pnpm**
+
+## Getting started
+
+### Prerequisites
+
+- Node 24+ and pnpm 11+ (or [`mise`](https://mise.jdx.dev) — `mise install` reads `mise.toml`)
+
+### Install
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment (optional)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`GITHUB_TOKEN` is optional — the app runs unauthenticated, just at lower GitHub API rate limits. See `.env.example`.
 
-## Learn More
+### Run
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open <http://localhost:3000> — you're redirected to `/ja` or `/en` based on your browser language.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Dev server |
+| `pnpm build` / `pnpm start` | Production build / serve |
+| `pnpm lint` / `pnpm fmt` | Biome check / write |
+| `pnpm typecheck` | Route types + `tsc --noEmit` |
+| `pnpm test` / `pnpm test:watch` | Vitest |
+| `pnpm test:e2e` | Playwright |
+| `pnpm storybook` | Component workshop on `:6006` |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Two editions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The same product, built twice to contrast two architectural philosophies. Only the **data layer** differs; the UI and behavior are identical.
+
+| | **Standard** | **Opinionated** |
+|---|---|---|
+| Branch | `main` | `opinionated` |
+| Style | Idiomatic Next.js + functional TypeScript | Effect-TS (clean architecture) |
+| Errors | Discriminated-union tagged types | `Data.TaggedError` |
+| Parsing | zod | `@effect/schema` |
+
+Both fetch from the GitHub **REST** API in Server Components (the token never reaches the client). The full rationale for each choice will live in `docs/introduction.md`.
+
+## Project structure
+
+```
+src/
+├── app/[locale]/        Routes (thin shells); root layout is a passthrough
+├── features/            UI by domain (search, repo-detail, shared)
+├── services/github/     GitHub REST client (Standard edition)
+├── models/              Domain types
+├── config/              Env access (server-only)
+├── i18n/                next-intl routing + request config
+└── lib/                 Generic utilities (cn, formatters)
+```
+
+## Internationalization
+
+Routed locales (`/ja`, `/en`) with type-safe message keys (a compile error on a missing/typo'd key) and a test asserting `ja` / `en` catalog parity.
+
+## AI usage
+
+Built with [Claude Code](https://claude.com/claude-code), working against the conventions in `.claude/rules/`. The collaboration was deliberately **human-steered and commit-by-commit**: the author made every architectural decision (the two editions, REST over GraphQL, the Effect/Standard split, i18n, error handling), and the agent implemented and verified each chunk — every commit reviewed before it landed. A fuller report (workflow, where the agent excelled, where it needed correcting) is expanded in `docs/introduction.md` at completion.
