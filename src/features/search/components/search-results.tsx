@@ -1,4 +1,4 @@
-import { GithubService } from "@/services/github.service"
+import { GithubService } from "@/services/github/github.service"
 import { toSearchViewState } from "../search-view-state"
 import { SearchEmpty } from "./search-empty"
 import { SearchError } from "./search-error"

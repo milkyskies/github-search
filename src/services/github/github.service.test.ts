@@ -1,6 +1,6 @@
+import { server } from "@tests/msw/server"
 import { HttpResponse, http } from "msw"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { server } from "../../tests/msw/server"
 import { GithubService } from "./github.service"
 
 afterEach(() => {

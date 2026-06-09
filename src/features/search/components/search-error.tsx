@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl"
-import type { GithubError } from "@/services/github.errors"
+import type { GithubError } from "@/services/github/github.errors"
 
 type ErrorMessageKey = "rateLimited" | "network" | "invalidQuery" | "generic"
 

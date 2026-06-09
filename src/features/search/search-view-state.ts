@@ -1,6 +1,6 @@
 import type { RepositorySummary } from "@/models/repository"
-import type { GithubError, GithubResult } from "@/services/github.errors"
-import type { SearchResult } from "@/services/github.schema"
+import type { GithubError, GithubResult } from "@/services/github/github.errors"
+import type { SearchResult } from "@/services/github/github.schema"
 
 export type SearchViewState =
 	| { kind: "error"; error: GithubError }
