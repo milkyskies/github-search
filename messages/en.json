@@ -2,5 +2,9 @@
 	"app": {
 		"title": "GitHub Repository Search",
 		"description": "Search GitHub repositories and inspect their details."
+	},
+	"search": {
+		"placeholder": "Search repositories",
+		"button": "Search"
 	}
 }
