@@ -1,44 +1,9 @@
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { ThemeProvider } from "@/features/shared/components/theme-provider"
-import "./globals.css"
+import type { ReactNode } from "react"
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
-})
-
-export const metadata: Metadata = {
-	title: "GitHub Repository Search",
-	description: "Search GitHub repositories and inspect their details.",
-}
-
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode
-}>) {
-	return (
-		<html
-			lang="en"
-			suppressHydrationWarning
-			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-		>
-			<body className="flex min-h-full flex-col">
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					{children}
-				</ThemeProvider>
-			</body>
-		</html>
-	)
+// The real <html>/<body> live in app/[locale]/layout.tsx because the lang
+// attribute depends on the locale, which is only known inside the [locale]
+// segment. next-intl's i18n routing requires this root layout to exist, so it
+// just passes children through.
+export default function RootLayout(props: { children: ReactNode }) {
+	return props.children
 }
