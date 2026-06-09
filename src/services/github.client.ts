@@ -9,10 +9,21 @@ const API_VERSION = "2022-11-28"
 
 const baseUrl = getEnv("GITHUB_API_BASE_URL") ?? DEFAULT_BASE_URL
 
+interface RequestOptions {
+	revalidate?: number
+}
+
 export const GithubClient = {
-	async request<T>(path: string, schema: z.ZodType<T>): Promise<GithubResult<T>> {
+	async request<T>(
+		path: string,
+		schema: z.ZodType<T>,
+		options?: RequestOptions,
+	): Promise<GithubResult<T>> {
 		const result = await fetchJson(`${baseUrl}${path}`, schema, {
-			init: { headers: requestHeaders() },
+			init: {
+				headers: requestHeaders(),
+				next: { revalidate: options?.revalidate },
+			},
 		})
 
 		return toGithubResult(result)

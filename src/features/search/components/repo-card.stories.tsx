@@ -1,16 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
-import type { RepositorySummary } from "@/models/repository"
+import { makeRepositorySummary } from "@/models/repository.fixture"
 import { RepoCard } from "./repo-card"
 
-const repository: RepositorySummary = {
-	id: 10270250,
-	fullName: "facebook/react",
-	description: "The library for web and native user interfaces.",
-	language: "JavaScript",
-	stars: 228000,
-	htmlUrl: "https://github.com/facebook/react",
-	owner: { login: "facebook", avatarUrl: "https://avatars.githubusercontent.com/u/69631?v=4" },
-}
+const repository = makeRepositorySummary()
 
 const meta = {
 	title: "search/RepoCard",
