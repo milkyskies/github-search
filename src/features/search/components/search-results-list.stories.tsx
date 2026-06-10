@@ -41,7 +41,3 @@ export const Default: Story = {}
 export const SingleResult: Story = {
 	args: { totalCount: 1, initialItems: [react] },
 }
-
-export const Loadable: Story = {
-	args: { totalCount: 12483 },
-}

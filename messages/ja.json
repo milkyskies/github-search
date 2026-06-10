@@ -10,6 +10,8 @@
 		"results": "{count}件のリポジトリ",
 		"loadMore": "もっと読み込む",
 		"loading": "読み込み中…",
+		"loadError": "続きを読み込めませんでした。",
+		"retry": "再試行",
 		"empty": "「{query}」に一致するリポジトリはありません。",
 		"error": {
 			"rateLimited": "GitHub のレート制限に達しました。しばらくしてからお試しください。",

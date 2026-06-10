@@ -14,7 +14,7 @@ interface SearchResultsListProps {
 
 export function SearchResultsList(props: SearchResultsListProps) {
 	const t = useTranslations("search")
-	const { items, hasMore, isPending, loadMore, sentinelRef } = useInfiniteSearch(
+	const { items, hasMore, isPending, failed, loadMore, sentinelRef } = useInfiniteSearch(
 		props.query,
 		props.initialItems,
 		props.totalCount,
@@ -32,7 +32,17 @@ export function SearchResultsList(props: SearchResultsListProps) {
 				))}
 			</ul>
 
-			{hasMore ? (
+			{failed ? (
+				<div className="flex flex-col items-center gap-2">
+					<p role="alert" className="text-destructive text-sm">
+						{t("loadError")}
+					</p>
+
+					<Button type="button" onClick={loadMore} disabled={isPending}>
+						{isPending ? t("loading") : t("retry")}
+					</Button>
+				</div>
+			) : hasMore ? (
 				<div className="flex flex-col items-center gap-2">
 					<div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
 
