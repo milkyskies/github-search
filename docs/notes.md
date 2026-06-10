@@ -30,7 +30,15 @@ These are non-negotiable for this project (and reflect milky-kit, which is the a
 
 ### Theming
 
-- Semantic **CSS-variable tokens in oklch**: `--background`, `--card`, `--muted`, `--border`, `--primary`…; separate `:root` (light) + `.dark` sets; mapped through Tailwind v4 `@theme inline` to utilities (`bg-card`, `text-muted-foreground`). Components reference **roles, never raw colors**.
+- Semantic **CSS-variable tokens in oklch**: `--background`, `--card`, `--muted`, `--border`, `--primary`, `--star`…; separate `:root` (light) + `.dark` sets; mapped through Tailwind v4 `@theme inline` to utilities (`bg-card`, `text-muted-foreground`, `fill-star`). Components reference **roles, never raw colors**.
+- **Aesthetic = "technical editorial."** Warm paper/ink palette, **flat — borders only, no shadows**. Hairline grids via the `gap-px bg-border` trick (1px gaps reveal the border color between cells). Star fill is the amber `--star` token, not a hardcoded yellow.
+- **No gratuitous motion or texture.** We deliberately removed a grain/noise overlay and a staggered fade-in reveal — the reveal made fast-scroll feel unstable ("it doesn't stop me"). Calm by default; motion only when it communicates state (e.g. the load spinner).
+
+### Typography
+
+- **Two typefaces, split by meaning**: **JetBrains Mono = machine values** (repo slugs/identifiers, counts, star numbers, stat figures — always with `tabular-nums` so digits don't jitter); **IBM Plex Sans JP = human-reading prose** (descriptions, prompts, errors, button labels). The contrast *is* the aesthetic — mono reads as "data from GitHub," sans as "words for you."
+- **JA-primary ⇒ the sans must cover Japanese.** This rules out Latin-only display fonts (a JP fallback would clash). IBM Plex Sans JP covers Latin + JA in one face and pairs with the mono.
+- **Load only the weights you use.** `subsets: ["latin"]` (JA glyphs fetch on demand — preloading the CJK block would tank first paint); weight list trimmed to what actually renders (`400/500/600`, no `700`).
 
 ### Dependencies
 
@@ -46,7 +54,9 @@ These are non-negotiable for this project (and reflect milky-kit, which is the a
 - **Theme:** next-themes, default **system**, 3-way switcher (Light/System/Dark). Currently `.dark` class; switching to `data-theme` is tracked (glb #7).
 - **Search UX:** **submit-based** (Enter / Search button), NOT auto-search-as-you-type — better for a remote API (no flicker, kinder to rate limits, matches the wireframe button).
 - **Components:** Base UI + Tailwind; `cn` + `cva`; lucide icons; Storybook stories per visual component; mobile-first responsive; dark mode.
-- **Pagination:** infinite scroll (done properly) — deferred.
+- **Search layout:** search bar lives at **page level, not in the header** (header = title + theme + locale only). Results render in an **internally scrollable bordered panel** (mono count-label strip on top), so the page doesn't grow unbounded.
+- **Infinite scroll = Instagram-seamless.** Eager prefetch (`IntersectionObserver` with `rootMargin: PREFETCH_ROOT_MARGIN` = `800px`, scoped to the scroll container via `root`); a spinner appears **only when the user outruns the prefetch**. `overscroll-contain` on the scroll box so a fast flick **stops firmly at the spinner** instead of rubber-banding or scroll-chaining to the page. No reveal animation.
+- **Subtle invariant — the re-entry guard is a *synchronous* `loadingRef`, not `isPending`.** `useTransition`'s `isPending` is async React state and stays stale within a single burst of observer callbacks, so guarding on it would double-fetch. The `useRef` flag flips synchronously and is the load-bearing guard; `isPending` is for the UI only.
 
 ## Decisions & rationale (the things we deliberated)
 
@@ -68,7 +78,8 @@ These are choices we reasoned through — kept so the *why* isn't lost.
 ## Testing strategy
 
 - **Unit (Vitest + Testing Library + MSW)** — stub the boundary, test the logic: pure fns, the data layer with MSW-mocked HTTP, component rendering with `renderWithProviders`.
-- **E2E (Playwright)** — real prod build, real browser: locale detection, search interaction. Search-with-results runs against a **mock GitHub server** (glb #8) for determinism.
+- **E2E (Playwright)** — real prod build, real browser: locale detection, search interaction. Search-with-results runs against a **mock GitHub server** for determinism. The mock exposes deterministic edge-case knobs by query: `__empty__` (0 results), `__ratelimit__` (403 rate-limit), `__failmore__` (page 1 ok, page ≥2 → 403, for the load-more retry path), and the `ghost` owner → 404.
+- **Playwright gotcha — free `:3000` before running the e2e gate.** The config has `reuseExistingServer: !CI`, so a running `pnpm dev` on `:3000` gets **reused with the real GitHub backend** instead of the mock. Symptom: `react` tests pass but every `__mock__` query fails (real GitHub doesn't know them). Stop the dev server first; Playwright then builds its own mock-pointed prod server.
 - **Stories (Storybook)** — visual workshop.
 - **Types as tests** — `switch`/`never` exhaustiveness, type-safe i18n keys, defined-error unions catch whole classes of bugs at compile time.
 - **Boundary testing is surgical** — only where there's a real threshold in *our* logic that changes behavior (e.g. the rate-limit classifier at `remaining === 0`). NOT for library passthrough or type-enforced dispatch.
@@ -77,12 +88,13 @@ These are choices we reasoned through — kept so the *why* isn't lost.
 
 ## Process
 
-- Full milky-kit flow: `glb` issues, feature branch + PR per issue, CI gates. Currently on branch `feat/2-standard-search` (issue #2).
+- Full milky-kit flow: `glb` issues, feature branch + PR per issue, CI gates. Standard edition is the active build (one issue/branch/PR at a time); Opinionated edition comes after.
 - **Commit-by-commit review** — author reviews each chunk before every commit.
 - CI = lint/typecheck/test/build + e2e; Security = OSV-Scanner + zizmor + Dependabot + npm cooldown. Branch protection unavailable (private Free repo).
 
 ## Open follow-ups (glb)
 
 - **#7** — switch dark mode from `.dark` class to `data-theme` attribute (cleaner semantics, scales to N themes). Touches `globals.css` `@custom-variant`, `[locale]/layout` `ThemeProvider attribute`, storybook `withThemeByDataAttribute`.
-- **#8** — mock GitHub API server for deterministic e2e (app targets it via `GITHUB_API_BASE_URL`; Playwright webServer starts mock + app).
 - `docs/introduction.md` (the "why I chose X" narrative + full AI-usage report) — written at Finalize.
+
+**Done since:** #8 (mock GitHub server, with the edge-case query knobs above), #10 / #16 (infinite scroll, shipped with the Instagram-seamless UX above).
