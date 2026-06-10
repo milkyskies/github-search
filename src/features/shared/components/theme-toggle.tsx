@@ -5,6 +5,7 @@ import { ToggleGroup } from "@base-ui/react/toggle-group"
 import { Monitor, Moon, Sun } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
 const THEMES = [
 	{ value: "light", Icon: Sun },
@@ -15,10 +16,15 @@ const THEMES = [
 export function ThemeToggle() {
 	const t = useTranslations("header.theme")
 	const { theme, setTheme } = useTheme()
+	const [mounted, setMounted] = useState(false)
+
+	useEffect(() => {
+		setMounted(true)
+	}, [])
 
 	return (
 		<ToggleGroup
-			value={[theme ?? "system"]}
+			value={mounted ? [theme ?? "system"] : []}
 			onValueChange={(value) => {
 				const next = value[0]
 
