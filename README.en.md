@@ -130,7 +130,7 @@ Supply-chain attacks on npm and GitHub Actions have become routine (compromised 
 
 - Tests run in two tiers: unit tests for the logic (with the HTTP boundary mocked via MSW) and Playwright e2e against a real production build that talks to a mock GitHub server with deterministic knobs (`__ratelimit__`, `__empty__`, `__failmore__`).
 - The tests target real logic (the error classifier, the result dedupe, the view-state mapping) rather than library passthrough or framework glue.
-- User-facing behavior is documented as Gherkin-style spec docs in [`docs/test/`](docs/test/) ([search](docs/test/search.md) and [detail](docs/test/detail.md)) with stable `SEARCH-NNN` codes linked to the tests that automate them.
+- User-facing behavior is documented as Gherkin-style spec docs in [`docs/test/`](docs/test/) ([search](docs/test/search.md) and [detail](docs/test/detail.md)) with stable `SEARCH-NNN` / `DETAIL-NNN` codes linked to the tests that automate them.
 - Visual components have Storybook stories, test descriptions are written in Japanese to match the product, and CI gates every PR (lint · typecheck · test · build · e2e) alongside security scans (OSV-Scanner, zizmor).
 
 ## Project structure

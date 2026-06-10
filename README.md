@@ -130,7 +130,7 @@ npm や GitHub Actions を狙ったサプライチェーン攻撃は、もはや
 
 - テストは 2 階層です。ロジックのユニットテスト（HTTP 境界は MSW でモック）と、本番ビルドに対する Playwright の e2e で、後者は決定的なフック（`__ratelimit__`・`__empty__`・`__failmore__`）を持つモックの GitHub サーバーに対して実行します。
 - テストは本物のロジック（エラー分類器・結果の重複排除・ビューステート変換）を対象とし、ライブラリの素通しやフレームワークの繋ぎ込みは対象にしません。
-- ユーザー向けの振る舞いは [`docs/test/`](docs/test/) の Gherkin 形式の仕様ドキュメント（[search](docs/test/search.md)・[detail](docs/test/detail.md)）に、安定した `SEARCH-NNN` コードと、それを自動化するテストへのリンク付きで記述しています。
+- ユーザー向けの振る舞いは [`docs/test/`](docs/test/) の Gherkin 形式の仕様ドキュメント（[search](docs/test/search.md)・[detail](docs/test/detail.md)）に、安定した `SEARCH-NNN` / `DETAIL-NNN` コードと、それを自動化するテストへのリンク付きで記述しています。
 - ビジュアルコンポーネントには Storybook の story を用意し、テスト名はプロダクトに合わせて日本語で記述し、CI は各 PR をゲート（lint・typecheck・test・build・e2e）しつつセキュリティスキャン（OSV-Scanner・zizmor）も走らせます。
 
 ## プロジェクト構成
