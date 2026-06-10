@@ -14,29 +14,34 @@ export function RepoCard(props: RepoCardProps) {
 	return (
 		<Link
 			href={`/repos/${repository.fullName}`}
-			className="flex items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+			className="flex items-center gap-4 border-primary/0 border-l-2 py-4 pr-2 pl-4 transition-colors hover:border-primary hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
 		>
 			<Image
 				src={repository.owner.avatarUrl}
 				alt=""
-				width={40}
-				height={40}
-				className="size-10 shrink-0 rounded-full"
+				width={36}
+				height={36}
+				className="size-9 shrink-0 rounded-full"
 			/>
 
 			<div className="min-w-0 flex-1">
-				<p className="truncate font-medium">{repository.fullName}</p>
+				<p className="truncate font-medium font-mono text-sm">{repository.fullName}</p>
 
 				{repository.description ? (
 					<p className="truncate text-muted-foreground text-sm">{repository.description}</p>
 				) : null}
 			</div>
 
-			<div className="flex shrink-0 items-center gap-3 text-muted-foreground text-sm">
-				{repository.language ? <span>{repository.language}</span> : null}
+			<div className="flex shrink-0 items-center gap-4 font-mono text-muted-foreground text-xs">
+				{repository.language ? (
+					<span className="hidden items-center gap-1.5 sm:flex">
+						<span className="size-2 rounded-full bg-primary/70" aria-hidden="true" />
+						{repository.language}
+					</span>
+				) : null}
 
-				<span className="flex items-center gap-1">
-					<Star className="size-4" aria-hidden="true" />
+				<span className="flex items-center gap-1 tabular-nums">
+					<Star className="size-3.5 fill-star text-star" aria-hidden="true" />
 					{formatCompact(repository.stars)}
 				</span>
 			</div>

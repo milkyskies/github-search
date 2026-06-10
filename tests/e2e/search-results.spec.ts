@@ -8,13 +8,13 @@ test("一致する検索でリポジトリ一覧が表示される", async ({ pa
 	await expect(page.getByRole("link", { name: /facebook\/react/ })).toBeVisible()
 })
 
-test("もっと読み込むと次のページが追加される", async ({ page }) => {
+test("スクロールすると次のページが読み込まれる", async ({ page }) => {
 	await page.goto("/ja?q=react")
 
 	const cards = page.getByRole("listitem")
 	await expect(cards).toHaveCount(20)
 
-	await page.getByRole("button", { name: "もっと読み込む" }).click()
+	await page.getByRole("status").scrollIntoViewIfNeeded()
 
 	await expect(cards).toHaveCount(40)
 })
@@ -22,7 +22,7 @@ test("もっと読み込むと次のページが追加される", async ({ page 
 test("追加読み込みが失敗したら再試行できる", async ({ page }) => {
 	await page.goto("/ja?q=__failmore__")
 
-	await page.getByRole("button", { name: "もっと読み込む" }).click()
+	await page.getByRole("status").scrollIntoViewIfNeeded()
 
 	await expect(page.getByText("続きを読み込めませんでした")).toBeVisible()
 	await expect(page.getByRole("button", { name: "再試行" })).toBeVisible()

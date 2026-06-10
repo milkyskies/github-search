@@ -20,6 +20,7 @@ export async function SearchResults(props: SearchResultsProps) {
 		case "results":
 			return (
 				<SearchResultsList
+					key={props.query}
 					query={props.query}
 					totalCount={state.totalCount}
 					initialItems={state.items}

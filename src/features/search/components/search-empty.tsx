@@ -8,6 +8,8 @@ export function SearchEmpty(props: SearchEmptyProps) {
 	const t = useTranslations("search")
 
 	return (
-		<p className="py-12 text-center text-muted-foreground">{t("empty", { query: props.query })}</p>
+		<p className="text-balance py-20 text-center text-muted-foreground">
+			{t("empty", { query: props.query })}
+		</p>
 	)
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { IBM_Plex_Sans_JP, JetBrains_Mono } from "next/font/google"
 import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
@@ -9,13 +9,14 @@ import { ThemeProvider } from "@/features/shared/components/theme-provider"
 import { routing } from "@/i18n/routing"
 import "../globals.css"
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const ibmPlexSansJp = IBM_Plex_Sans_JP({
+	variable: "--font-ibm-plex-sans-jp",
 	subsets: ["latin"],
+	weight: ["400", "500", "600"],
 })
 
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+	variable: "--font-jetbrains-mono",
 	subsets: ["latin"],
 })
 
@@ -56,7 +57,7 @@ export default async function LocaleLayout(props: {
 		<html
 			lang={locale}
 			suppressHydrationWarning
-			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+			className={`${ibmPlexSansJp.variable} ${jetbrainsMono.variable} h-full antialiased`}
 		>
 			<body className="flex min-h-full flex-col">
 				<NextIntlClientProvider>

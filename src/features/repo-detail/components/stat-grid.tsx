@@ -12,7 +12,7 @@ export function StatGrid(props: StatGridProps) {
 	const { repository } = props
 
 	return (
-		<dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+		<dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-4">
 			<StatTile icon={Star} label={t("stars")} value={repository.stars} />
 			<StatTile icon={Eye} label={t("watchers")} value={repository.watchers} />
 			<StatTile icon={GitFork} label={t("forks")} value={repository.forks} />
