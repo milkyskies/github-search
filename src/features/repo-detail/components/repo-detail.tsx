@@ -1,8 +1,10 @@
 import { ExternalLink } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { Skeleton } from "@/features/shared/components/skeleton"
 import type { RepositoryDetail } from "@/models/repository"
 import { RepoHeader } from "./repo-header"
-import { StatGrid } from "./stat-grid"
+import { StatGrid, StatGridShell } from "./stat-grid"
+import { StatTileShell } from "./stat-tile"
 
 const STAT_SKELETON_KEYS = ["stars", "watchers", "forks", "issues"]
 
@@ -41,18 +43,29 @@ export function RepoDetailSkeleton() {
 	return (
 		<div className="flex flex-col gap-6">
 			<div className="flex items-center gap-4">
-				<div className="size-16 shrink-0 animate-pulse rounded-full bg-card" />
-				<div className="h-7 w-48 animate-pulse rounded bg-card" />
+				<Skeleton className="size-14 shrink-0 rounded-full bg-card" />
+
+				<div className="space-y-2">
+					<Skeleton className="h-7 w-48 bg-card" />
+					<Skeleton className="h-4 w-24 bg-card" />
+				</div>
 			</div>
 
-			<dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+			<div className="space-y-2">
+				<Skeleton className="h-4 w-full bg-card" />
+				<Skeleton className="h-4 w-2/3 bg-card" />
+			</div>
+
+			<StatGridShell>
 				{STAT_SKELETON_KEYS.map((key) => (
-					<div
-						key={key}
-						className="h-[88px] animate-pulse rounded-lg border border-border bg-card"
-					/>
+					<StatTileShell key={key}>
+						<Skeleton className="h-3 w-16" />
+						<Skeleton className="h-7 w-12" />
+					</StatTileShell>
 				))}
-			</dl>
+			</StatGridShell>
+
+			<Skeleton className="h-4 w-32 self-start bg-card" />
 		</div>
 	)
 }
