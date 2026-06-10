@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { Button } from "@/features/shared/components/button"
-import { CONTAINER } from "@/lib/container"
+import { PageContainer } from "@/features/shared/components/page-container"
 
 interface RepoDetailErrorBoundaryProps {
 	error: Error & { digest?: string }
@@ -18,12 +18,12 @@ export default function RepoDetailErrorBoundary(props: RepoDetailErrorBoundaryPr
 	}, [props.error])
 
 	return (
-		<main className={`${CONTAINER} flex flex-col items-center gap-4 py-16 text-center`}>
+		<PageContainer as="main" className="flex flex-col items-center gap-4 py-16 text-center">
 			<p role="alert" className="text-destructive">
 				{t("generic")}
 			</p>
 
 			<Button onClick={props.reset}>{t("retry")}</Button>
-		</main>
+		</PageContainer>
 	)
 }
