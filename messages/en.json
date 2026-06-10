@@ -8,6 +8,10 @@
 		"button": "Search",
 		"prompt": "Search for a repository to get started.",
 		"results": "{count, plural, =1 {# repository} other {# repositories}}",
+		"loadMore": "Load more",
+		"loading": "Loading…",
+		"loadError": "Couldn't load more results.",
+		"retry": "Try again",
 		"empty": "No repositories found for \"{query}\".",
 		"error": {
 			"rateLimited": "GitHub's rate limit was reached. Please try again in a moment.",

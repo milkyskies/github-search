@@ -47,8 +47,8 @@
   - 期待: 結果の代わりにレート制限のメッセージが表示される
   - Automated: `tests/e2e/search-results.spec.ts`
 
-- [ ] **[SEARCH-008]** スクロールで続きが読み込まれる
+- [x] **[SEARCH-008]** スクロールまたは「もっと読み込む」で続きが読み込まれる
   - 前提: 複数ページ分の結果があるクエリ
-  - 操作: 一覧の末尾までスクロールする
+  - 操作: 一覧の末尾までスクロールする、または「もっと読み込む」を押す
   - 期待: 次のページが追加され、GitHub の上限 1000 件で停止する
-  - Automated: （glb #8・#10 待ち）
+  - Automated: `tests/e2e/search-results.spec.ts`（追加読み込み）、`src/features/search/pagination.test.ts`（1000 件上限）

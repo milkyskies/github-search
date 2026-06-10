@@ -1,38 +1,56 @@
+"use client"
+
 import { useTranslations } from "next-intl"
+import { Button } from "@/features/shared/components/button"
 import type { RepositorySummary } from "@/models/repository"
+import { useInfiniteSearch } from "../use-infinite-search"
 import { RepoCard } from "./repo-card"
 
-const SKELETON_KEYS = ["a", "b", "c", "d", "e"]
-
-export function SearchResultsSkeleton() {
-	return (
-		<ul className="flex flex-col gap-2">
-			{SKELETON_KEYS.map((key) => (
-				<li key={key} className="h-[72px] animate-pulse rounded-lg border border-border bg-card" />
-			))}
-		</ul>
-	)
-}
-
 interface SearchResultsListProps {
+	query: string
 	totalCount: number
-	items: readonly RepositorySummary[]
+	initialItems: readonly RepositorySummary[]
 }
 
 export function SearchResultsList(props: SearchResultsListProps) {
 	const t = useTranslations("search")
+	const { items, hasMore, isPending, failed, loadMore, sentinelRef } = useInfiniteSearch(
+		props.query,
+		props.initialItems,
+		props.totalCount,
+	)
 
 	return (
 		<section className="flex flex-col gap-3">
 			<p className="text-muted-foreground text-sm">{t("results", { count: props.totalCount })}</p>
 
 			<ul className="flex flex-col gap-2">
-				{props.items.map((repository) => (
+				{items.map((repository) => (
 					<li key={repository.id}>
 						<RepoCard repository={repository} />
 					</li>
 				))}
 			</ul>
+
+			{failed ? (
+				<div className="flex flex-col items-center gap-2">
+					<p role="alert" className="text-destructive text-sm">
+						{t("loadError")}
+					</p>
+
+					<Button type="button" onClick={loadMore} disabled={isPending}>
+						{isPending ? t("loading") : t("retry")}
+					</Button>
+				</div>
+			) : hasMore ? (
+				<div className="flex flex-col items-center gap-2">
+					<div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
+
+					<Button type="button" onClick={loadMore} disabled={isPending}>
+						{isPending ? t("loading") : t("loadMore")}
+					</Button>
+				</div>
+			) : null}
 		</section>
 	)
 }

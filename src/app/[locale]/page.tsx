@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { SearchBar } from "@/features/search/components/search-bar"
 import { SearchPrompt } from "@/features/search/components/search-prompt"
 import { SearchResults } from "@/features/search/components/search-results"
-import { SearchResultsSkeleton } from "@/features/search/components/search-results-list"
+import { SearchResultsSkeleton } from "@/features/search/components/search-results-skeleton"
 import { PageContainer } from "@/features/shared/components/page-container"
 
 export default async function SearchPage(props: { searchParams: Promise<{ q?: string }> }) {

@@ -2,6 +2,7 @@ import { createServer, type ServerResponse } from "node:http"
 
 const PORT = Number(process.env.MOCK_GITHUB_PORT ?? 4000)
 const RATE_LIMIT_QUERY = "__ratelimit__"
+const FAIL_MORE_QUERY = "__failmore__"
 const EMPTY_QUERY = "__empty__"
 const NOT_FOUND_OWNER = "ghost"
 const SEARCH_TOTAL_COUNT = 1000
@@ -92,6 +93,16 @@ const server = createServer((req, res) => {
 		const page = Number(requestUrl.searchParams.get("page") ?? 1)
 
 		if (query.includes(RATE_LIMIT_QUERY)) {
+			sendJson(
+				res,
+				403,
+				{ message: "API rate limit exceeded" },
+				{ "x-ratelimit-remaining": "0", "x-ratelimit-reset": "9999999999" },
+			)
+			return
+		}
+
+		if (query.includes(FAIL_MORE_QUERY) && page > 1) {
 			sendJson(
 				res,
 				403,
