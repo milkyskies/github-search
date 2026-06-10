@@ -130,7 +130,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("parse")
 	})
 
-	it("未認証で動作する — トークン未設定時は Authorization ヘッダーを付けない", async () => {
+	it("未認証で動作する：トークン未設定時は Authorization ヘッダーを付けない", async () => {
 		let authHeader: string | null = "unset"
 		server.use(
 			http.get(endpoint, ({ request }) => {
