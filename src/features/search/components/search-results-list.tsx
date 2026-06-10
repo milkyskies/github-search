@@ -27,7 +27,7 @@ export function SearchResultsList(props: SearchResultsListProps) {
 
 			<div
 				ref={scrollRef}
-				className="max-h-[calc(100dvh-15rem)] min-h-64 overflow-y-auto overscroll-contain"
+				className="max-h-[calc(100dvh_-_15rem)] min-h-64 overflow-y-auto overscroll-contain"
 			>
 				<ul className="divide-y divide-border">
 					{items.map((repository) => (
