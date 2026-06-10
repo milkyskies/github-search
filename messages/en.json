@@ -15,5 +15,25 @@
 			"invalidQuery": "That search query isn't valid.",
 			"generic": "Something went wrong. Please try again."
 		}
+	},
+	"detail": {
+		"backToSearch": "Back to search",
+		"viewOnGithub": "View on GitHub",
+		"stats": {
+			"stars": "Stars",
+			"watchers": "Watchers",
+			"forks": "Forks",
+			"issues": "Issues"
+		},
+		"notFound": {
+			"title": "Repository not found",
+			"message": "We couldn't find that repository. It may have been renamed, made private, or never existed."
+		},
+		"error": {
+			"rateLimited": "GitHub's rate limit was reached. Please try again in a moment.",
+			"network": "Couldn't reach GitHub. Check your connection and try again.",
+			"generic": "Something went wrong. Please try again.",
+			"retry": "Try again"
+		}
 	}
 }
