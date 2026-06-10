@@ -18,7 +18,13 @@ export async function SearchResults(props: SearchResultsProps) {
 		case "empty":
 			return <SearchEmpty query={props.query} />
 		case "results":
-			return <SearchResultsList totalCount={state.totalCount} items={state.items} />
+			return (
+				<SearchResultsList
+					query={props.query}
+					totalCount={state.totalCount}
+					initialItems={state.items}
+				/>
+			)
 		default: {
 			const _exhaustive: never = state
 

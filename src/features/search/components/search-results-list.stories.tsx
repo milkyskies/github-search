@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 import { makeRepositorySummary } from "@/models/repository.fixture"
-import { SearchResultsList, SearchResultsSkeleton } from "./search-results-list"
+import { SearchResultsList } from "./search-results-list"
 
 const react = makeRepositorySummary()
 
@@ -29,7 +29,7 @@ const meta = {
 	component: SearchResultsList,
 	parameters: { layout: "padded" },
 	tags: ["autodocs"],
-	args: { totalCount: 12483, items: [react, vue, svelte] },
+	args: { query: "react", totalCount: 3, initialItems: [react, vue, svelte] },
 } satisfies Meta<typeof SearchResultsList>
 
 export default meta
@@ -39,9 +39,9 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 
 export const SingleResult: Story = {
-	args: { totalCount: 1, items: [react] },
+	args: { totalCount: 1, initialItems: [react] },
 }
 
-export const Skeleton: Story = {
-	render: () => <SearchResultsSkeleton />,
+export const Loadable: Story = {
+	args: { totalCount: 12483 },
 }

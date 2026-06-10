@@ -8,6 +8,17 @@ test("一致する検索でリポジトリ一覧が表示される", async ({ pa
 	await expect(page.getByRole("link", { name: /facebook\/react/ })).toBeVisible()
 })
 
+test("もっと読み込むと次のページが追加される", async ({ page }) => {
+	await page.goto("/ja?q=react")
+
+	const cards = page.getByRole("listitem")
+	await expect(cards).toHaveCount(20)
+
+	await page.getByRole("button", { name: "もっと読み込む" }).click()
+
+	await expect(cards).toHaveCount(40)
+})
+
 test("一致が無いと空の状態が表示される", async ({ page }) => {
 	await page.goto("/ja?q=__empty__")
 
