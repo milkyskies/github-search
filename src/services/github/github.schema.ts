@@ -1,5 +1,5 @@
 import { z } from "zod"
-import type { RepositorySummary } from "@/models/repository"
+import type { RepositoryDetail, RepositorySummary } from "@/models/repository"
 
 export const repositorySummarySchema = z
 	.object({
@@ -34,3 +34,34 @@ export const searchResponseSchema = z
 	.transform((raw) => ({ totalCount: raw.total_count, items: raw.items }))
 
 export type SearchResult = z.infer<typeof searchResponseSchema>
+
+export const repositoryDetailSchema = z
+	.object({
+		id: z.number(),
+		full_name: z.string(),
+		description: z.string().nullable(),
+		language: z.string().nullable(),
+		stargazers_count: z.number(),
+		subscribers_count: z.number(),
+		forks_count: z.number(),
+		open_issues_count: z.number(),
+		html_url: z.string(),
+		owner: z.object({
+			login: z.string(),
+			avatar_url: z.string(),
+		}),
+	})
+	.transform(
+		(raw): RepositoryDetail => ({
+			id: raw.id,
+			fullName: raw.full_name,
+			description: raw.description ?? undefined,
+			language: raw.language ?? undefined,
+			stars: raw.stargazers_count,
+			watchers: raw.subscribers_count,
+			forks: raw.forks_count,
+			openIssues: raw.open_issues_count,
+			htmlUrl: raw.html_url,
+			owner: { login: raw.owner.login, avatarUrl: raw.owner.avatar_url },
+		}),
+	)
