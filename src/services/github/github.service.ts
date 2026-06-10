@@ -9,7 +9,7 @@ const SEARCH_REVALIDATE_SECONDS = 60
 const DETAIL_REVALIDATE_SECONDS = 300
 
 export const GithubService = {
-	searchRepositories(query: string, page = 1): Promise<GithubResult<SearchResult>> {
+	searchRepositories: cache((query: string, page = 1): Promise<GithubResult<SearchResult>> => {
 		const params = new URLSearchParams({
 			q: query,
 			per_page: String(PER_PAGE),
@@ -19,7 +19,7 @@ export const GithubService = {
 		return GithubClient.request(`/search/repositories?${params}`, searchResponseSchema, {
 			revalidate: SEARCH_REVALIDATE_SECONDS,
 		})
-	},
+	}),
 
 	getRepository: cache((owner: string, repo: string): Promise<GithubResult<RepositoryDetail>> => {
 		const path = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`

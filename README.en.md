@@ -4,6 +4,8 @@ English | [日本語](README.md)
 
 Search GitHub repositories, browse the results, and open any repository's detail page (owner, language, stars, watchers, forks, issues). Built with Next.js 16.
 
+Live demo: <https://github-search-theta-one.vercel.app>
+
 > A take-home built with a production mindset. This README focuses on the engineering decisions; visual design was out of scope, but readability and ease of use were not.
 
 ## Features

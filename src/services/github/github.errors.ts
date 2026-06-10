@@ -14,8 +14,9 @@ export function isTransientGithubError(error: GithubError): boolean {
 		case "rateLimited":
 		case "network":
 		case "timeout":
-		case "unexpected":
 			return true
+		case "unexpected":
+			return error.status >= 500
 		case "notFound":
 		case "invalidQuery":
 		case "parse":

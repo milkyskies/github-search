@@ -23,6 +23,7 @@ export function useInfiniteSearch(
 	const hasMore = !reachedEnd && !loadError && hasMoreResults(items.length, totalCount)
 
 	const loadMore = useCallback(() => {
+		// Guard on a synchronous ref, not `isPending`: the IntersectionObserver can fire twice before React commits the transition, and `isPending` would still read false on the second call, double-fetching the next page.
 		if (loadingRef.current) return
 
 		loadingRef.current = true

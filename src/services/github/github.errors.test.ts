@@ -6,6 +6,7 @@ const cases: ReadonlyArray<{ error: GithubError; transient: boolean }> = [
 	{ error: { kind: "network" }, transient: true },
 	{ error: { kind: "timeout" }, transient: true },
 	{ error: { kind: "unexpected", status: 503 }, transient: true },
+	{ error: { kind: "unexpected", status: 401 }, transient: false },
 	{ error: { kind: "notFound" }, transient: false },
 	{ error: { kind: "invalidQuery", message: "Invalid" }, transient: false },
 	{ error: { kind: "parse" }, transient: false },
