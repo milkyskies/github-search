@@ -4,6 +4,7 @@ import { SearchBar } from "@/features/search/components/search-bar"
 import { SearchPrompt } from "@/features/search/components/search-prompt"
 import { SearchResults } from "@/features/search/components/search-results"
 import { SearchResultsSkeleton } from "@/features/search/components/search-results-list"
+import { CONTAINER } from "@/lib/container"
 
 export default async function SearchPage(props: { searchParams: Promise<{ q?: string }> }) {
 	const { q } = await props.searchParams
@@ -12,8 +13,8 @@ export default async function SearchPage(props: { searchParams: Promise<{ q?: st
 	const t = await getTranslations("app")
 
 	return (
-		<main className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4 sm:p-8">
-			<h1 className="font-semibold text-xl">{t("title")}</h1>
+		<main className={`${CONTAINER} flex flex-col gap-6 py-6 sm:py-8`}>
+			<h1 className="sr-only">{t("title")}</h1>
 
 			<SearchBar initialQuery={query} />
 
