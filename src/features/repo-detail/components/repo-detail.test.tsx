@@ -5,7 +5,7 @@ import { makeRepositoryDetail } from "@/models/repository.fixture"
 import { RepoDetail } from "./repo-detail"
 
 describe("RepoDetail", () => {
-	it("renders the full name and the four stat counts", () => {
+	it("リポジトリ名と 4 つの統計値を表示する", () => {
 		renderWithProviders(<RepoDetail repository={makeRepositoryDetail()} />)
 
 		expect(screen.getByRole("heading", { name: "facebook/react" })).toBeInTheDocument()
@@ -15,7 +15,7 @@ describe("RepoDetail", () => {
 		expect(screen.getByText("980")).toBeInTheDocument()
 	})
 
-	it("omits the language when absent", () => {
+	it("言語が無い場合は表示しない", () => {
 		renderWithProviders(<RepoDetail repository={makeRepositoryDetail({ language: undefined })} />)
 
 		expect(screen.queryByText("JavaScript")).not.toBeInTheDocument()

@@ -13,19 +13,19 @@ const repository: RepositorySummary = {
 }
 
 describe("toSearchViewState", () => {
-	it("maps an error result to the error state", () => {
+	it("エラー結果を error ステートに変換する", () => {
 		const state = toSearchViewState({ kind: "error", error: { kind: "network" } })
 
 		expect(state).toEqual({ kind: "error", error: { kind: "network" } })
 	})
 
-	it("maps zero results to the empty state", () => {
+	it("0 件の結果を empty ステートに変換する", () => {
 		const state = toSearchViewState({ kind: "ok", data: { totalCount: 0, items: [] } })
 
 		expect(state).toEqual({ kind: "empty" })
 	})
 
-	it("maps a populated result to the results state", () => {
+	it("結果ありを results ステートに変換する", () => {
 		const state = toSearchViewState({ kind: "ok", data: { totalCount: 1, items: [repository] } })
 
 		expect(state).toEqual({ kind: "results", totalCount: 1, items: [repository] })

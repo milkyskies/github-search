@@ -14,8 +14,8 @@ function flattenKeys(value: unknown, prefix = ""): string[] {
 	})
 }
 
-describe("message catalogs", () => {
-	it("ja and en expose an identical set of keys", () => {
+describe("メッセージカタログ", () => {
+	it("ja と en は同一のキー集合を公開する", () => {
 		const enKeys = flattenKeys(en).sort()
 		const jaKeys = flattenKeys(ja).sort()
 
