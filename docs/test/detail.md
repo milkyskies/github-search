@@ -15,3 +15,9 @@
   - 操作: ページを直接開く
   - 期待: 「リポジトリが見つかりません」の not-found ページが表示される
   - Automated: `tests/e2e/detail.spec.ts`
+
+- [x] **[DETAIL-003]** 一時的なエラー時は再試行できる
+  - 前提: GitHub がレート制限など一時的なエラーを返す
+  - 操作: 詳細ページを開く
+  - 期待: 原因に応じたメッセージとともに再試行ボタンが表示される（not-found や parse など一時的でないエラーには出さない）
+  - Automated: `src/features/search/components/search-error.test.tsx`（共通の一時的エラー判定と再試行表示。`RepoDetailError` も同じ `GithubErrorDisplay` を経由する）

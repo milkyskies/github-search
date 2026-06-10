@@ -41,14 +41,20 @@
   - 期待: クエリ名を含む「リポジトリが見つかりません」のメッセージが表示される
   - Automated: `tests/e2e/search-results.spec.ts`
 
-- [x] **[SEARCH-007]** レート制限時は分かりやすいエラーが出る
+- [x] **[SEARCH-007]** レート制限など一時的なエラー時は分かりやすいメッセージと再試行が出る
   - 前提: GitHub がレート制限のレスポンスを返す
   - 操作: ユーザーが検索する
-  - 期待: 結果の代わりにレート制限のメッセージが表示される
-  - Automated: `tests/e2e/search-results.spec.ts`
+  - 期待: 結果の代わりに原因に応じたメッセージが表示され、再試行ボタンが出る（一時的でない parse などのエラーには再試行を出さない）
+  - Automated: `tests/e2e/search-results.spec.ts`、`src/features/search/components/search-error.test.tsx`（一時的エラーは再試行・非一時的は非表示）
 
 - [x] **[SEARCH-008]** スクロールで続きが先読みされ、シームレスに追加される
   - 前提: 複数ページ分の結果があるクエリ
   - 操作: 結果ボックスを末尾に向けてスクロールする
   - 期待: 末尾に達する前に次のページが先読みされ、追いつけない場合のみスピナーが出る。GitHub の上限 1000 件で停止する
   - Automated: `tests/e2e/search-results.spec.ts`（追加読み込み）、`src/features/search/pagination.test.ts`（1000 件上限）
+
+- [x] **[SEARCH-009]** 追加読み込みが失敗したら原因が表示され再試行できる
+  - 前提: 2 ページ目以降がレート制限などで失敗するクエリ
+  - 操作: 結果ボックスを末尾までスクロールする
+  - 期待: 汎用的な「読み込めません」ではなく、原因に応じたメッセージ（例: レート制限）と再試行ボタンが出る
+  - Automated: `tests/e2e/search-results.spec.ts`（追加読み込みの再試行）
