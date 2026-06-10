@@ -1,6 +1,6 @@
 import type { Decorator, Meta, StoryObj } from "@storybook/nextjs-vite"
-import { AppHeader } from "./app-header"
 import { ThemeProvider } from "./theme-provider"
+import { ThemeToggle } from "./theme-toggle"
 
 const withTheme: Decorator = (Story) => (
 	<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -9,12 +9,12 @@ const withTheme: Decorator = (Story) => (
 )
 
 const meta = {
-	title: "shared/AppHeader",
-	component: AppHeader,
-	parameters: { layout: "fullscreen" },
+	title: "shared/ThemeToggle",
+	component: ThemeToggle,
+	parameters: { layout: "centered" },
 	tags: ["autodocs"],
 	decorators: [withTheme],
-} satisfies Meta<typeof AppHeader>
+} satisfies Meta<typeof ThemeToggle>
 
 export default meta
 
