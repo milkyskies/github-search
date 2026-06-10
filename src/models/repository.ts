@@ -10,3 +10,9 @@ export interface RepositorySummary {
 		readonly avatarUrl: string
 	}
 }
+
+export interface RepositoryDetail extends RepositorySummary {
+	readonly watchers: number
+	readonly forks: number
+	readonly openIssues: number
+}

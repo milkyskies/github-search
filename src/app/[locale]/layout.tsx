@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 import type { ReactNode } from "react"
+import { AppHeader } from "@/features/shared/components/app-header"
 import { ThemeProvider } from "@/features/shared/components/theme-provider"
 import { routing } from "@/i18n/routing"
 import "../globals.css"
@@ -65,6 +66,8 @@ export default async function LocaleLayout(props: {
 						enableSystem
 						disableTransitionOnChange
 					>
+						<AppHeader />
+
 						{props.children}
 					</ThemeProvider>
 				</NextIntlClientProvider>

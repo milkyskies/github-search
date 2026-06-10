@@ -1,4 +1,4 @@
-import type { RepositorySummary } from "./repository"
+import type { RepositoryDetail, RepositorySummary } from "./repository"
 
 export function makeRepositorySummary(overrides?: Partial<RepositorySummary>): RepositorySummary {
 	return {
@@ -9,6 +9,16 @@ export function makeRepositorySummary(overrides?: Partial<RepositorySummary>): R
 		stars: 228000,
 		htmlUrl: "https://github.com/facebook/react",
 		owner: { login: "facebook", avatarUrl: "https://avatars.githubusercontent.com/u/69631?v=4" },
+		...overrides,
+	}
+}
+
+export function makeRepositoryDetail(overrides?: Partial<RepositoryDetail>): RepositoryDetail {
+	return {
+		...makeRepositorySummary(),
+		watchers: 6700,
+		forks: 46500,
+		openIssues: 980,
 		...overrides,
 	}
 }

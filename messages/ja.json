@@ -15,5 +15,26 @@
 			"invalidQuery": "検索クエリが正しくありません。",
 			"generic": "問題が発生しました。再度お試しください。"
 		}
+	},
+	"detail": {
+		"backToSearch": "検索に戻る",
+		"viewOnGithub": "GitHub で見る",
+		"stats": {
+			"stars": "スター",
+			"watchers": "ウォッチャー",
+			"forks": "フォーク",
+			"issues": "Issue"
+		},
+		"notFound": {
+			"title": "リポジトリが見つかりません",
+			"message": "リポジトリが見つかりませんでした。名前が変更されたか、非公開になったか、存在しない可能性があります。"
+		},
+		"error": {
+			"rateLimited": "GitHub のレート制限に達しました。しばらくしてからお試しください。",
+			"network": "GitHub に接続できませんでした。接続を確認して再度お試しください。",
+			"invalidQuery": "リクエストが正しくありません。",
+			"generic": "問題が発生しました。再度お試しください。",
+			"retry": "再試行"
+		}
 	}
 }
