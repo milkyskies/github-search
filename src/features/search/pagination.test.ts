@@ -2,15 +2,15 @@ import { describe, expect, it } from "vitest"
 import { hasMoreResults, SEARCH_RESULT_CAP } from "./pagination"
 
 describe("hasMoreResults", () => {
-	it("is true while fewer than the total are loaded", () => {
+	it("読み込み済みが総数より少ない間は true を返す", () => {
 		expect(hasMoreResults(20, 100)).toBe(true)
 	})
 
-	it("is false once every result is loaded", () => {
+	it("すべて読み込み終えたら false を返す", () => {
 		expect(hasMoreResults(100, 100)).toBe(false)
 	})
 
-	it("stops at GitHub's 1000-result cap even when the total is larger", () => {
+	it("総数がより大きくても GitHub の 1000 件上限で停止する", () => {
 		expect(hasMoreResults(980, 5000)).toBe(true)
 		expect(hasMoreResults(SEARCH_RESULT_CAP, 5000)).toBe(false)
 	})

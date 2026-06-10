@@ -8,7 +8,7 @@ const url = "https://example.test/data"
 const schema = z.object({ name: z.string() })
 
 describe("fetchJson", () => {
-	it("parses a valid response", async () => {
+	it("正常なレスポンスをパースする", async () => {
 		server.use(http.get(url, () => HttpResponse.json({ name: "ok" })))
 
 		const result = await fetchJson(url, schema)
@@ -20,7 +20,7 @@ describe("fetchJson", () => {
 		}
 	})
 
-	it("returns a status error on a non-2xx response", async () => {
+	it("2xx 以外のレスポンスでは status エラーを返す", async () => {
 		server.use(http.get(url, () => new HttpResponse(null, { status: 404 })))
 
 		const result = await fetchJson(url, schema)
@@ -31,7 +31,7 @@ describe("fetchJson", () => {
 		}
 	})
 
-	it("returns a parse error on an unexpected shape", async () => {
+	it("想定外の形では parse エラーを返す", async () => {
 		server.use(http.get(url, () => HttpResponse.json({ wrong: 1 })))
 
 		const result = await fetchJson(url, schema)
@@ -39,7 +39,7 @@ describe("fetchJson", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("parse")
 	})
 
-	it("returns a network error when the request fails", async () => {
+	it("リクエスト失敗時は network エラーを返す", async () => {
 		server.use(http.get(url, () => HttpResponse.error()))
 
 		const result = await fetchJson(url, schema)
@@ -47,7 +47,7 @@ describe("fetchJson", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("network")
 	})
 
-	it("returns a timeout error when the request is too slow", async () => {
+	it("リクエストが遅すぎる場合は timeout エラーを返す", async () => {
 		server.use(
 			http.get(url, async () => {
 				await delay(50)
@@ -61,7 +61,7 @@ describe("fetchJson", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("timeout")
 	})
 
-	it("returns an invalidBody error when the response is not JSON", async () => {
+	it("レスポンスが JSON でない場合は invalidBody エラーを返す", async () => {
 		server.use(http.get(url, () => new HttpResponse("<html>not json</html>", { status: 200 })))
 
 		const result = await fetchJson(url, schema)

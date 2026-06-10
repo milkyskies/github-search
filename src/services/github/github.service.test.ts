@@ -20,7 +20,7 @@ const repoItem = {
 }
 
 describe("GithubService.searchRepositories", () => {
-	it("returns parsed repositories on success", async () => {
+	it("成功時はパース済みのリポジトリを返す", async () => {
 		server.use(http.get(endpoint, () => HttpResponse.json({ total_count: 1, items: [repoItem] })))
 
 		const result = await GithubService.searchRepositories("react")
@@ -37,7 +37,7 @@ describe("GithubService.searchRepositories", () => {
 		}
 	})
 
-	it("maps nullable fields to undefined", async () => {
+	it("null 許容フィールドを undefined に変換する", async () => {
 		server.use(
 			http.get(endpoint, () =>
 				HttpResponse.json({
@@ -55,7 +55,7 @@ describe("GithubService.searchRepositories", () => {
 		}
 	})
 
-	it("maps 403 with no remaining quota to rateLimited", async () => {
+	it("残り quota が無い 403 を rateLimited に変換する", async () => {
 		server.use(
 			http.get(
 				endpoint,
@@ -72,7 +72,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("rateLimited")
 	})
 
-	it("maps a secondary rate limit (403 + Retry-After) to rateLimited", async () => {
+	it("セカンダリレート制限 (403 + Retry-After) を rateLimited に変換する", async () => {
 		server.use(
 			http.get(
 				endpoint,
@@ -85,7 +85,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("rateLimited")
 	})
 
-	it("treats a 403 with remaining quota as unexpected, not rate-limited", async () => {
+	it("quota が残っている 403 はレート制限ではなく unexpected として扱う", async () => {
 		server.use(
 			http.get(
 				endpoint,
@@ -98,7 +98,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("unexpected")
 	})
 
-	it("maps a 429 to rateLimited", async () => {
+	it("429 を rateLimited に変換する", async () => {
 		server.use(http.get(endpoint, () => new HttpResponse(null, { status: 429 })))
 
 		const result = await GithubService.searchRepositories("react")
@@ -106,7 +106,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("rateLimited")
 	})
 
-	it("maps a 5xx to unexpected", async () => {
+	it("5xx を unexpected に変換する", async () => {
 		server.use(http.get(endpoint, () => new HttpResponse(null, { status: 503 })))
 
 		const result = await GithubService.searchRepositories("react")
@@ -114,7 +114,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("unexpected")
 	})
 
-	it("maps 422 to invalidQuery", async () => {
+	it("422 を invalidQuery に変換する", async () => {
 		server.use(http.get(endpoint, () => new HttpResponse(null, { status: 422 })))
 
 		const result = await GithubService.searchRepositories("")
@@ -122,7 +122,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("invalidQuery")
 	})
 
-	it("maps a malformed response to parse", async () => {
+	it("不正な形式のレスポンスを parse に変換する", async () => {
 		server.use(http.get(endpoint, () => HttpResponse.json({ total_count: "lots", items: [] })))
 
 		const result = await GithubService.searchRepositories("react")
@@ -130,7 +130,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(result.kind === "error" && result.error.kind).toBe("parse")
 	})
 
-	it("works unauthenticated — no Authorization header when no token is set", async () => {
+	it("未認証で動作する — トークン未設定時は Authorization ヘッダーを付けない", async () => {
 		let authHeader: string | null = "unset"
 		server.use(
 			http.get(endpoint, ({ request }) => {
@@ -145,7 +145,7 @@ describe("GithubService.searchRepositories", () => {
 		expect(authHeader).toBeNull()
 	})
 
-	it("sends a Bearer token when GITHUB_TOKEN is set", async () => {
+	it("GITHUB_TOKEN 設定時は Bearer トークンを送る", async () => {
 		vi.stubEnv("GITHUB_TOKEN", "secret-token")
 		let authHeader: string | null = null
 		server.use(
@@ -179,7 +179,7 @@ const repoDetail = {
 }
 
 describe("GithubService.getRepository", () => {
-	it("returns parsed detail and reads watchers from subscribers_count, not the star-aliased watchers_count", async () => {
+	it("パース済みの詳細を返し、watchers をスター数にエイリアスされた watchers_count ではなく subscribers_count から読む", async () => {
 		server.use(http.get(detailEndpoint, () => HttpResponse.json(repoDetail)))
 
 		const result = await GithubService.getRepository("facebook", "react")

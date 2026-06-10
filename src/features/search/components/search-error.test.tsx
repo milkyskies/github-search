@@ -7,7 +7,7 @@ import { SearchError } from "./search-error"
 vi.mock("@/features/shared/retry-action", () => ({ retryGithubFetch: vi.fn() }))
 
 describe("SearchError", () => {
-	it("offers a retry control for a transient error", () => {
+	it("一時的なエラーには再試行コントロールを表示する", () => {
 		const error: GithubError = { kind: "rateLimited", resetAt: undefined }
 
 		renderWithProviders(<SearchError error={error} />)
@@ -15,7 +15,7 @@ describe("SearchError", () => {
 		expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument()
 	})
 
-	it("omits retry for a non-transient parse error", () => {
+	it("一時的でない parse エラーには再試行を表示しない", () => {
 		const error: GithubError = { kind: "parse" }
 
 		renderWithProviders(<SearchError error={error} />)
