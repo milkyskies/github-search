@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/features/shared/components/button"
+import { githubErrorMessageKey } from "@/features/shared/github-error-message"
 import type { RepositorySummary } from "@/models/repository"
 import { useInfiniteSearch } from "../use-infinite-search"
 import { RepoCard } from "./repo-card"
@@ -15,11 +16,8 @@ interface SearchResultsListProps {
 
 export function SearchResultsList(props: SearchResultsListProps) {
 	const t = useTranslations("search")
-	const { items, hasMore, isPending, failed, loadMore, sentinelRef, scrollRef } = useInfiniteSearch(
-		props.query,
-		props.initialItems,
-		props.totalCount,
-	)
+	const { items, hasMore, isPending, loadError, loadMore, sentinelRef, scrollRef } =
+		useInfiniteSearch(props.query, props.initialItems, props.totalCount)
 
 	return (
 		<section className="overflow-hidden rounded-lg border border-border">
@@ -39,10 +37,10 @@ export function SearchResultsList(props: SearchResultsListProps) {
 					))}
 				</ul>
 
-				{failed ? (
+				{loadError ? (
 					<div className="flex flex-col items-center gap-2 border-border border-t p-4">
 						<p role="alert" className="text-destructive text-sm">
-							{t("loadError")}
+							{t(`error.${githubErrorMessageKey(loadError)}`)}
 						</p>
 
 						<Button type="button" onClick={loadMore} disabled={isPending}>

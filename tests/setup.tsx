@@ -7,7 +7,7 @@ import { server } from "./msw/server"
 vi.mock("@/i18n/navigation", () => ({
 	Link: (props: ComponentProps<"a">) => <a {...props} />,
 	usePathname: () => "/",
-	useRouter: () => ({ replace: vi.fn(), push: vi.fn(), prefetch: vi.fn() }),
+	useRouter: () => ({ replace: vi.fn(), push: vi.fn(), prefetch: vi.fn(), refresh: vi.fn() }),
 	redirect: vi.fn(),
 	getPathname: () => "/",
 }))

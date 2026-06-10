@@ -7,6 +7,8 @@ const DEFAULT_BASE_URL = "https://api.github.com"
 const ACCEPT_HEADER = "application/vnd.github+json"
 const API_VERSION = "2022-11-28"
 
+export const GITHUB_CACHE_TAG = "github"
+
 const baseUrl = getEnv("GITHUB_API_BASE_URL") ?? DEFAULT_BASE_URL
 
 interface RequestOptions {
@@ -22,7 +24,7 @@ export const GithubClient = {
 		const result = await fetchJson(`${baseUrl}${path}`, schema, {
 			init: {
 				headers: requestHeaders(),
-				next: { revalidate: options?.revalidate },
+				next: { revalidate: options?.revalidate, tags: [GITHUB_CACHE_TAG] },
 			},
 		})
 
