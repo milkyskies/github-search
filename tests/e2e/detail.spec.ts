@@ -24,3 +24,10 @@ test("存在しないリポジトリは not-found ページを表示する", asy
 
 	await expect(page.getByRole("heading", { name: "リポジトリが見つかりません" })).toBeVisible()
 })
+
+test("詳細ページでレート制限時はエラーと再試行が表示される", async ({ page }) => {
+	await page.goto("/ja/repos/ratelimit/example")
+
+	await expect(page.getByText("レート制限に達しました", { exact: false })).toBeVisible()
+	await expect(page.getByRole("button", { name: "再試行" })).toBeVisible()
+})

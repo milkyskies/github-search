@@ -5,6 +5,7 @@ const RATE_LIMIT_QUERY = "__ratelimit__"
 const FAIL_MORE_QUERY = "__failmore__"
 const EMPTY_QUERY = "__empty__"
 const NOT_FOUND_OWNER = "ghost"
+const RATE_LIMIT_OWNER = "ratelimit"
 const SEARCH_TOTAL_COUNT = 1000
 const AVATAR_URL = "https://avatars.githubusercontent.com/u/9919?v=4"
 
@@ -129,6 +130,16 @@ const server = createServer((req, res) => {
 
 		if (owner === NOT_FOUND_OWNER) {
 			sendJson(res, 404, { message: "Not Found" })
+			return
+		}
+
+		if (owner === RATE_LIMIT_OWNER) {
+			sendJson(
+				res,
+				403,
+				{ message: "API rate limit exceeded" },
+				{ "x-ratelimit-remaining": "0", "x-ratelimit-reset": "9999999999" },
+			)
 			return
 		}
 
