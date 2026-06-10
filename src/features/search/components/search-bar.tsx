@@ -1,5 +1,6 @@
 "use client"
 
+import { Loader2, Search } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type FormEvent, useTransition } from "react"
 import { Button } from "@/features/shared/components/button"
@@ -21,30 +22,33 @@ export function SearchBar(props: SearchBarProps) {
 
 		const value = new FormData(event.currentTarget).get("q")
 		const query = typeof value === "string" ? value.trim() : ""
-		const target = query ? `${pathname}?q=${encodeURIComponent(query)}` : pathname
 
 		startTransition(() => {
-			router.replace(target)
+			router.replace(query ? `${pathname}?q=${encodeURIComponent(query)}` : pathname)
 		})
 	}
 
 	return (
-		<form
-			method="GET"
-			onSubmit={handleSubmit}
-			aria-busy={isPending}
-			className="flex flex-col gap-2 sm:flex-row"
-		>
-			<TextField
-				name="q"
-				type="search"
-				defaultValue={props.initialQuery}
-				placeholder={t("placeholder")}
-				aria-label={t("placeholder")}
-				className="flex-1"
-			/>
+		<form method="GET" onSubmit={handleSubmit} aria-busy={isPending} className="flex gap-2">
+			<div className="relative flex-1">
+				<Search
+					className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-3 size-4 text-muted-foreground"
+					aria-hidden="true"
+				/>
 
-			<Button type="submit">{t("button")}</Button>
+				<TextField
+					name="q"
+					type="search"
+					defaultValue={props.initialQuery}
+					placeholder={t("placeholder")}
+					aria-label={t("placeholder")}
+					className="pl-9"
+				/>
+			</div>
+
+			<Button type="submit" disabled={isPending} className="shrink-0 sm:w-24">
+				{isPending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : t("button")}
+			</Button>
 		</form>
 	)
 }

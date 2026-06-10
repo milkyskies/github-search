@@ -13,13 +13,13 @@ export default async function SearchPage(props: { searchParams: Promise<{ q?: st
 	const t = await getTranslations("app")
 
 	return (
-		<PageContainer as="main" className="flex flex-col gap-6 py-6 sm:py-8">
+		<PageContainer as="main" className="flex flex-col gap-5 py-6 sm:py-8">
 			<h1 className="sr-only">{t("title")}</h1>
 
 			<SearchBar initialQuery={query} />
 
 			{query ? (
-				<Suspense key={query} fallback={<SearchResultsSkeleton />}>
+				<Suspense fallback={<SearchResultsSkeleton />}>
 					<SearchResults query={query} />
 				</Suspense>
 			) : (

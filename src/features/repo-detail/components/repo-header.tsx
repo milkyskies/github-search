@@ -13,16 +13,21 @@ export function RepoHeader(props: RepoHeaderProps) {
 			<Image
 				src={repository.owner.avatarUrl}
 				alt=""
-				width={64}
-				height={64}
-				className="size-16 shrink-0 rounded-full"
+				width={56}
+				height={56}
+				className="size-14 shrink-0 rounded-full"
 			/>
 
 			<div className="min-w-0">
-				<h1 className="truncate font-semibold text-2xl">{repository.fullName}</h1>
+				<h1 className="break-all font-mono font-semibold text-xl tracking-tight sm:text-2xl">
+					{repository.fullName}
+				</h1>
 
 				{repository.language ? (
-					<p className="text-muted-foreground text-sm">{repository.language}</p>
+					<p className="mt-1 flex items-center gap-1.5 font-mono text-muted-foreground text-sm">
+						<span className="size-2 rounded-full bg-primary/70" aria-hidden="true" />
+						{repository.language}
+					</p>
 				) : null}
 			</div>
 		</header>

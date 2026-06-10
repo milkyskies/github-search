@@ -8,11 +8,11 @@ export function AppHeader() {
 	const t = useTranslations("app")
 
 	return (
-		<header className="sticky top-0 z-10 border-border border-b bg-background/80 backdrop-blur">
-			<PageContainer className="flex items-center justify-between gap-4 py-4">
+		<header className="sticky top-0 z-20 border-border border-b bg-background/80 backdrop-blur">
+			<PageContainer className="flex h-16 items-center justify-between gap-4">
 				<Link
 					href="/"
-					className="truncate rounded-sm font-semibold text-lg transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+					className="shrink-0 rounded-sm font-mono font-semibold text-base tracking-tight transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				>
 					{t("title")}
 				</Link>

@@ -3,6 +3,8 @@ import type { RepositorySummary } from "@/models/repository"
 import { hasMoreResults } from "./pagination"
 import { searchMore } from "./search-actions"
 
+const PREFETCH_ROOT_MARGIN = "800px"
+
 function appendUnique(
 	previous: readonly RepositorySummary[],
 	next: readonly RepositorySummary[],
@@ -24,6 +26,7 @@ export function useInfiniteSearch(
 	const pageRef = useRef(1)
 	const loadingRef = useRef(false)
 	const sentinelRef = useRef<HTMLDivElement>(null)
+	const scrollRef = useRef<HTMLDivElement>(null)
 
 	const hasMore = !reachedEnd && !failed && hasMoreResults(items.length, totalCount)
 
@@ -55,14 +58,17 @@ export function useInfiniteSearch(
 
 		if (!hasMore || !sentinel) return
 
-		const observer = new IntersectionObserver((entries) => {
-			if (entries.some((entry) => entry.isIntersecting)) loadMore()
-		})
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) loadMore()
+			},
+			{ root: scrollRef.current, rootMargin: PREFETCH_ROOT_MARGIN },
+		)
 
 		observer.observe(sentinel)
 
 		return () => observer.disconnect()
 	}, [hasMore, loadMore])
 
-	return { items, hasMore, isPending, failed, loadMore, sentinelRef }
+	return { items, hasMore, isPending, failed, loadMore, sentinelRef, scrollRef }
 }

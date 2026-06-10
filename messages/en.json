@@ -8,7 +8,6 @@
 		"button": "Search",
 		"prompt": "Search for a repository to get started.",
 		"results": "{count, plural, =1 {# repository} other {# repositories}}",
-		"loadMore": "Load more",
 		"loading": "Loading…",
 		"loadError": "Couldn't load more results.",
 		"retry": "Try again",
