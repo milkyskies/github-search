@@ -3,6 +3,8 @@ import createNextIntlPlugin from "next-intl/plugin"
 
 const isDev = process.env.NODE_ENV !== "production"
 
+const AVATAR_CACHE_TTL_SECONDS = 60 * 60 * 24 * 31
+
 const contentSecurityPolicy = [
 	"default-src 'self'",
 	"base-uri 'self'",
@@ -28,6 +30,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
 	images: {
 		remotePatterns: [{ protocol: "https", hostname: "avatars.githubusercontent.com" }],
+		minimumCacheTTL: AVATAR_CACHE_TTL_SECONDS,
 	},
 	async headers() {
 		return [{ source: "/:path*", headers: securityHeaders }]
