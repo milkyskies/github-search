@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test"
 
 const baseURL = "http://localhost:3000"
+const mockGithubUrl = "http://localhost:4000"
 
 export default defineConfig({
 	testDir: "./tests/e2e",
@@ -18,10 +19,18 @@ export default defineConfig({
 			use: { ...devices["Desktop Chrome"] },
 		},
 	],
-	webServer: {
-		command: "pnpm build && pnpm start",
-		url: baseURL,
-		reuseExistingServer: !process.env.CI,
-		timeout: 120_000,
-	},
+	webServer: [
+		{
+			command: "node tests/mock-github/server.ts",
+			url: `${mockGithubUrl}/search/repositories?q=healthcheck`,
+			reuseExistingServer: !process.env.CI,
+			timeout: 30_000,
+		},
+		{
+			command: `pnpm build && GITHUB_API_BASE_URL=${mockGithubUrl} pnpm start`,
+			url: baseURL,
+			reuseExistingServer: !process.env.CI,
+			timeout: 120_000,
+		},
+	],
 })
