@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import type { RepositorySummary } from "@/models/repository"
+import type { GithubError } from "@/services/github/github.errors"
 import { hasMoreResults } from "./pagination"
 import { searchMore } from "./search-actions"
 
@@ -21,27 +22,27 @@ export function useInfiniteSearch(
 ) {
 	const [items, setItems] = useState<readonly RepositorySummary[]>(initialItems)
 	const [reachedEnd, setReachedEnd] = useState(false)
-	const [failed, setFailed] = useState(false)
+	const [loadError, setLoadError] = useState<GithubError | undefined>(undefined)
 	const [isPending, startTransition] = useTransition()
 	const pageRef = useRef(1)
 	const loadingRef = useRef(false)
 	const sentinelRef = useRef<HTMLDivElement>(null)
 	const scrollRef = useRef<HTMLDivElement>(null)
 
-	const hasMore = !reachedEnd && !failed && hasMoreResults(items.length, totalCount)
+	const hasMore = !reachedEnd && !loadError && hasMoreResults(items.length, totalCount)
 
 	const loadMore = useCallback(() => {
 		if (loadingRef.current) return
 
 		loadingRef.current = true
-		setFailed(false)
+		setLoadError(undefined)
 		const nextPage = pageRef.current + 1
 
 		startTransition(async () => {
 			const result = await searchMore(query, nextPage)
 
 			if (result.kind === "error") {
-				setFailed(true)
+				setLoadError(result.error)
 			} else if (result.data.items.length === 0) {
 				setReachedEnd(true)
 			} else {
@@ -70,5 +71,5 @@ export function useInfiniteSearch(
 		return () => observer.disconnect()
 	}, [hasMore, loadMore])
 
-	return { items, hasMore, isPending, failed, loadMore, sentinelRef, scrollRef }
+	return { items, hasMore, isPending, loadError, loadMore, sentinelRef, scrollRef }
 }

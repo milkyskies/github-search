@@ -9,14 +9,14 @@
 		"prompt": "Search for a repository to get started.",
 		"results": "{count, plural, =1 {# repository} other {# repositories}}",
 		"loading": "Loading…",
-		"loadError": "Couldn't load more results.",
 		"retry": "Try again",
 		"empty": "No repositories found for \"{query}\".",
 		"error": {
 			"rateLimited": "GitHub's rate limit was reached. Please try again in a moment.",
 			"network": "Couldn't reach GitHub. Check your connection and try again.",
 			"invalidQuery": "That search query isn't valid.",
-			"generic": "Something went wrong. Please try again."
+			"generic": "Something went wrong. Please try again.",
+			"retry": "Try again"
 		}
 	},
 	"detail": {

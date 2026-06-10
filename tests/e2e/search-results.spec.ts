@@ -24,7 +24,7 @@ test("追加読み込みが失敗したら再試行できる", async ({ page }) 
 
 	await page.getByRole("status").scrollIntoViewIfNeeded()
 
-	await expect(page.getByText("続きを読み込めませんでした")).toBeVisible()
+	await expect(page.getByText("レート制限に達しました", { exact: false })).toBeVisible()
 	await expect(page.getByRole("button", { name: "再試行" })).toBeVisible()
 })
 
