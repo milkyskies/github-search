@@ -36,5 +36,14 @@
 			"generic": "Something went wrong. Please try again.",
 			"retry": "Try again"
 		}
+	},
+	"header": {
+		"language": "Language",
+		"theme": {
+			"label": "Theme",
+			"light": "Light",
+			"system": "System",
+			"dark": "Dark"
+		}
 	}
 }
