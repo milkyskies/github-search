@@ -121,7 +121,7 @@ npm や GitHub Actions を狙ったサプライチェーン攻撃は、もはや
 - 最小限の依存が第一の防御線です。ライブラリより（`fetch`・`Intl`・`Headers` といった）プラットフォームを優先し、パッケージが少なければ侵入口も少なくなります。
 - Dependabot はクールダウン付きで動かし、公開されたばかりのリリースを 1 日は取り込みません。乗っ取られたバージョンが lockfile に届く前に表面化する猶予を作ります。
 - GitHub Actions は可動タグではなくコミット SHA で固定しているため、タグの再ポイント（tj-actions 系の攻撃）で CI に悪意あるコードを差し込まれません。
-- すべての PR をスキャンします。既知の脆弱な依存には OSV-Scanner、安全でないワークフローには zizmor、漏洩した秘密情報には GitGuardian。
+- すべての PR をスキャンします。既知の脆弱な依存には OSV-Scanner、安全でないワークフローには zizmor。
 - アプリ層では、厳格な Content-Security-Policy とセキュリティヘッダー一式（HSTS・X-Frame-Options・Referrer-Policy・Permissions-Policy・X-Content-Type-Options）を設定し、GitHub トークンはサーバー専用でクライアントバンドルには一切入れません。
 
 ### テストと CI
@@ -129,7 +129,7 @@ npm や GitHub Actions を狙ったサプライチェーン攻撃は、もはや
 - テストは 2 階層です。ロジックのユニットテスト（HTTP 境界は MSW でモック）と、本番ビルドに対する Playwright の e2e で、後者は決定的なフック（`__ratelimit__`・`__empty__`・`__failmore__`）を持つモックの GitHub サーバーに対して実行します。
 - テストは本物のロジック（エラー分類器・結果の重複排除・ビューステート変換）を対象とし、ライブラリの素通しやフレームワークの繋ぎ込みは対象にしません。
 - ユーザー向けの振る舞いは [`docs/test/`](docs/test/) の Gherkin 形式の仕様ドキュメント（[search](docs/test/search.md)・[detail](docs/test/detail.md)）に、安定した `SEARCH-NNN` コードと、それを自動化するテストへのリンク付きで記述しています。
-- ビジュアルコンポーネントには Storybook の story を用意し、テスト名はプロダクトに合わせて日本語で記述し、CI は各 PR をゲート（lint・typecheck・test・build・e2e）しつつセキュリティスキャン（OSV-Scanner・zizmor・GitGuardian）も走らせます。
+- ビジュアルコンポーネントには Storybook の story を用意し、テスト名はプロダクトに合わせて日本語で記述し、CI は各 PR をゲート（lint・typecheck・test・build・e2e）しつつセキュリティスキャン（OSV-Scanner・zizmor）も走らせます。
 
 ## プロジェクト構成
 
@@ -141,6 +141,7 @@ src/
 ├── models/              ドメイン型
 ├── config/              環境変数アクセス（サーバー専用）
 ├── i18n/                next-intl のルーティング + リクエスト設定
+├── proxy.ts             ロケールルーティング用ミドルウェア（Next 16）
 └── lib/                 汎用ユーティリティ（cn・フォーマッタ）
 ```
 

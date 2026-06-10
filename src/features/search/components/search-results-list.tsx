@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl"
 import { Button } from "@/features/shared/components/button"
 import { githubErrorMessageKey } from "@/features/shared/github-error-message"
 import type { RepositorySummary } from "@/models/repository"
+import { isTransientGithubError } from "@/services/github/github.errors"
 import { useInfiniteSearch } from "../use-infinite-search"
 import { RepoCard } from "./repo-card"
 
@@ -43,9 +44,11 @@ export function SearchResultsList(props: SearchResultsListProps) {
 							{t(`error.${githubErrorMessageKey(loadError)}`)}
 						</p>
 
-						<Button type="button" onClick={loadMore} disabled={isPending}>
-							{isPending ? t("loading") : t("retry")}
-						</Button>
+						{isTransientGithubError(loadError) ? (
+							<Button type="button" onClick={loadMore} disabled={isPending}>
+								{isPending ? t("loading") : t("retry")}
+							</Button>
+						) : null}
 					</div>
 				) : hasMore ? (
 					<div ref={sentinelRef} className="flex items-center justify-center py-6" role="status">

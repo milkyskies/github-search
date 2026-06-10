@@ -121,7 +121,7 @@ Supply-chain attacks on npm and GitHub Actions have become routine (compromised 
 - A minimal dependency surface is the first line of defense: preferring the platform (`fetch`, `Intl`, `Headers`) over libraries means fewer packages, and fewer packages means fewer ways in.
 - Dependabot runs with a cooldown, so a freshly published release is not pulled in for a day, enough time for a compromised version to surface before it ever reaches the lockfile.
 - GitHub Actions are pinned to commit SHAs rather than moving tags, so a re-pointed tag (the tj-actions class of attack) cannot swap malicious code into CI.
-- Every PR is scanned: OSV-Scanner for known-vulnerable dependencies, zizmor for insecure workflow patterns, and GitGuardian for leaked secrets.
+- Every PR is scanned: OSV-Scanner for known-vulnerable dependencies and zizmor for insecure workflow patterns.
 - At the app level: a strict Content-Security-Policy plus the full security-header set (HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy, X-Content-Type-Options), and the GitHub token stays server-only, never in the client bundle.
 
 ### Testing & CI
@@ -129,7 +129,7 @@ Supply-chain attacks on npm and GitHub Actions have become routine (compromised 
 - Tests run in two tiers: unit tests for the logic (with the HTTP boundary mocked via MSW) and Playwright e2e against a real production build that talks to a mock GitHub server with deterministic knobs (`__ratelimit__`, `__empty__`, `__failmore__`).
 - The tests target real logic (the error classifier, the result dedupe, the view-state mapping) rather than library passthrough or framework glue.
 - User-facing behavior is documented as Gherkin-style spec docs in [`docs/test/`](docs/test/) ([search](docs/test/search.md) and [detail](docs/test/detail.md)) with stable `SEARCH-NNN` codes linked to the tests that automate them.
-- Visual components have Storybook stories, test descriptions are written in Japanese to match the product, and CI gates every PR (lint · typecheck · test · build · e2e) alongside security scans (OSV-Scanner, zizmor, GitGuardian).
+- Visual components have Storybook stories, test descriptions are written in Japanese to match the product, and CI gates every PR (lint · typecheck · test · build · e2e) alongside security scans (OSV-Scanner, zizmor).
 
 ## Project structure
 
@@ -141,6 +141,7 @@ src/
 ├── models/              Domain types
 ├── config/              Env access (server-only)
 ├── i18n/                next-intl routing + request config
+├── proxy.ts             Locale-routing middleware (Next 16)
 └── lib/                 Generic utilities (cn, formatters)
 ```
 
