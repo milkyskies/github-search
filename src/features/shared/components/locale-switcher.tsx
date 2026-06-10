@@ -22,7 +22,9 @@ export function LocaleSwitcher() {
 			items={LOCALE_ITEMS}
 			value={locale}
 			onValueChange={(value) => {
-				if (hasLocale(routing.locales, value)) router.replace(pathname, { locale: value })
+				if (!hasLocale(routing.locales, value)) return
+
+				router.replace(`${pathname}${window.location.search}`, { locale: value })
 			}}
 		>
 			<Select.Trigger
