@@ -81,7 +81,7 @@ The points I focused on, aiming for a production-ready implementation.
 - I use the native `fetch` rather than a client library like Octokit or axios. It pulls in no extra dependencies (Octokit alone is 16 packages / 7.3 MB; axios is one more package to trust, audit, and patch), and, importantly in Next.js, the framework augments the global `fetch` with the Data Cache, `revalidate`, and cache tags, which an axios or Octokit call would bypass entirely. Neither library gives the runtime validation I want anyway, so I wrap `fetch` in a small client that parses with zod and returns typed results.
 - The data layer is split into a generic transport (`GithubClient.request(path, schema)`) and a domain API (`GithubService.searchRepositories(...)`), so the HTTP and parsing mechanics live in one place and call sites read as plain domain operations.
 - The wire is validated by a hand-written zod schema rather than a generated one (orval / `@octokit/openapi-types`): the official OpenAPI spec is megabytes for the two endpoints and seven fields I actually use, so a focused schema is both leaner and more resilient, validating only what I read and stripping everything else.
-- The app uses the GitHub REST API as the brief specifies, which surfaces a subtle trap: REST's `watchers_count` is aliased to the star count, so the Watcher count is read from `subscribers_count` on the detail endpoint; the obvious field would be wrong.
+- The app uses the GitHub REST API, which surfaces a subtle trap: REST's `watchers_count` is aliased to the star count, so the Watcher count is read from `subscribers_count` on the detail endpoint; the obvious field would be wrong.
 
 ### Use of Next.js
 

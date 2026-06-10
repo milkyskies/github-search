@@ -81,7 +81,7 @@ e2e は `:3000` / `:4000` で独自のサーバーを起動するため、`pnpm 
 - Octokit や axios のようなクライアントライブラリではなく、素の `fetch` を使っています。依存が増えず（Octokit だけで 16 パッケージ / 7.3 MB、axios も信頼・監査・更新の対象が 1 つ増えます）、さらに Next.js ではフレームワークがグローバルの `fetch` を Data Cache・`revalidate`・キャッシュタグで拡張しており、axios や Octokit の呼び出しはそれを完全にバイパスしてしまいます。どちらも欲しいランタイムバリデーションは提供しないため、`fetch` を薄いクライアントで包み、zod でパースして型付きの結果を返します。
 - データ層は、汎用のトランスポート（`GithubClient.request(path, schema)`）とドメイン API（`GithubService.searchRepositories(...)`）に分割しています。HTTP とパースの仕組みを一箇所にまとめ、呼び出し側は素直なドメイン操作として読めます。
 - ワイヤー形式の検証には、生成物（orval / `@octokit/openapi-types`）ではなく手書きの zod スキーマを使っています。公式の OpenAPI 仕様は、実際に使う 2 エンドポイント・7 フィールドに対して数メガバイトあります。対象を絞った手書きスキーマのほうが軽量で、かつ堅牢です（読み取るフィールドだけを検証し、それ以外は捨てます）。
-- 課題の指定どおり GitHub REST API を使っていますが、ここに微妙な罠があります。REST の `watchers_count` は Star 数のエイリアスなので、Watcher 数は詳細エンドポイントの `subscribers_count` から読み取ります。それらしいフィールドを素直に使うと誤った値になります。
+- GitHub REST API を使っていますが、ここに微妙な罠があります。REST の `watchers_count` は Star 数のエイリアスなので、Watcher 数は詳細エンドポイントの `subscribers_count` から読み取ります。それらしいフィールドを素直に使うと誤った値になります。
 
 ### Next.js の活用
 
