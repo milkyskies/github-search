@@ -83,6 +83,13 @@ The points I focused on, aiming for a production-ready implementation.
 - The wire is validated by a hand-written zod schema rather than a generated one (orval / `@octokit/openapi-types`): the official OpenAPI spec is megabytes for the two endpoints and seven fields I actually use, so a focused schema is both leaner and more resilient, validating only what I read and stripping everything else.
 - The app uses the GitHub REST API, which surfaces a subtle trap: REST's `watchers_count` is aliased to the star count, so the Watcher count is read from `subscribers_count` on the detail endpoint; the obvious field would be wrong.
 
+### Error handling
+
+- Failures are typed values, not exceptions: the GitHub data layer returns a `Result` union, so a `ZodError` or a thrown `fetch` never leaks past the boundary.
+- Every failure is classified into a named kind (rate-limit, network, timeout, invalid query, not-found, parse) and surfaced with a specific message rather than a generic one.
+- A retry is offered only when it can actually succeed (transient kinds like a rate-limit or a network blip), not for permanent failures like a bad query or a malformed response. The same model backs the inline search error, the load-more failure, and the detail page.
+- Every error classification has a unit test (each `HttpError` and `GithubError` kind), so a wrong mapping fails the build.
+
 ### Use of Next.js
 
 - Server Components keep the data layer entirely server-side, with zero client JS for fetching.
@@ -98,7 +105,6 @@ The points I focused on, aiming for a production-ready implementation.
 - No classes for data: functions are grouped as objects-of-closures (a resource's API is one PascalCase namespace object), and mutation is avoided.
 - Strict typing throughout: no `as` casts outside trusted boundaries (JSON, env), no non-null `!`, no `any`; the absent case is always narrowed or handled explicitly.
 - Domain states are discriminated unions consumed with an exhaustive `switch` on the tag plus a `never` default, so an unhandled case is a compile error, my stand-in for pattern matching.
-- The GitHub data layer returns failures as a typed `Result` union: rate-limit, network, timeout, and parse errors are values, not thrown exceptions, and no library error (`ZodError`, a fetch throw) leaks past that boundary.
 - Domain models are pure `readonly` types; the zod schema and its transform live at the boundary (`github.schema.ts`), not on the model, and that boundary is where wire `null` becomes domain `undefined`, so the domain never juggles two kinds of "absent."
 - i18n message keys are type-safe (a missing or mistyped key is a compile error), backed by a `ja` / `en` catalog-parity test; together these make the types themselves a test that catches whole classes of bugs before runtime.
 - Functions read in phases (setup → validate → work → return) separated by blank lines, and magic values are named `UPPER_SNAKE_CASE` constants.
@@ -112,7 +118,6 @@ The points I focused on, aiming for a production-ready implementation.
 ### Usability
 
 - Infinite scroll prefetches eagerly so browsing feels seamless, showing a spinner only when you out-scroll the prefetch, with `overscroll-contain` so a fast flick stops cleanly at the end.
-- Transient errors (rate-limit, network) show the actual cause plus a retry button, instead of a dead-end message.
 - The layout is responsive and mobile-first: the results panel and the four-up stat grid adapt down to small screens.
 
 ### Security
@@ -129,7 +134,7 @@ Supply-chain attacks on npm and GitHub Actions have become routine (compromised 
 
 - Tests run in two tiers: unit tests for the logic (with the HTTP boundary mocked via MSW) and Playwright e2e against a real production build that talks to a mock GitHub server with deterministic knobs (`__ratelimit__`, `__empty__`, `__failmore__`).
 - The tests target real logic (the error classifier, the result dedupe, the view-state mapping) rather than library passthrough or framework glue.
-- User-facing behavior is documented as Gherkin-style spec docs in [`docs/test/`](docs/test/) ([search](docs/test/search.md) and [detail](docs/test/detail.md)) with stable `SEARCH-NNN` / `DETAIL-NNN` codes linked to the tests that automate them.
+- Behavior across both happy and sad paths is documented as Gherkin-style spec docs in [`docs/test/`](docs/test/) ([search](docs/test/search.md) and [detail](docs/test/detail.md)) with stable `SEARCH-NNN` / `DETAIL-NNN` codes linked to the tests that automate them.
 - Visual components have Storybook stories, test descriptions are written in Japanese to match the product, and CI gates every PR (lint · typecheck · test · build · e2e) alongside security scans (OSV-Scanner, zizmor).
 
 ## Alternatives

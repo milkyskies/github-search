@@ -23,4 +23,13 @@ describe("SearchError", () => {
 		expect(screen.getByRole("alert")).toBeInTheDocument()
 		expect(screen.queryByRole("button")).not.toBeInTheDocument()
 	})
+
+	it("不正なクエリには再試行を表示しない", () => {
+		const error: GithubError = { kind: "invalidQuery", message: "Validation Failed" }
+
+		renderWithProviders(<SearchError error={error} />)
+
+		expect(screen.getByRole("alert")).toBeInTheDocument()
+		expect(screen.queryByRole("button")).not.toBeInTheDocument()
+	})
 })
