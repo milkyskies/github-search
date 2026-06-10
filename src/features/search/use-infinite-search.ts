@@ -1,19 +1,10 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import type { RepositorySummary } from "@/models/repository"
 import type { GithubError } from "@/services/github/github.errors"
-import { hasMoreResults } from "./pagination"
+import { appendUnique, hasMoreResults } from "./pagination"
 import { searchMore } from "./search-actions"
 
 const PREFETCH_ROOT_MARGIN = "800px"
-
-function appendUnique(
-	previous: readonly RepositorySummary[],
-	next: readonly RepositorySummary[],
-): readonly RepositorySummary[] {
-	const seen = new Set(previous.map((repository) => repository.id))
-
-	return [...previous, ...next.filter((repository) => !seen.has(repository.id))]
-}
 
 export function useInfiniteSearch(
 	query: string,
