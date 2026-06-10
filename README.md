@@ -1,151 +1,153 @@
-English | [日本語](README.ja.md)
+[English](README.en.md) | 日本語
 
-# 1d-kadai — GitHub Repository Search
+# GitHub リポジトリ検索
 
-Search GitHub repositories, browse the results, and open any repository's detail page — owner, language, stars, watchers, forks, issues. Built with Next.js 16.
+GitHub のリポジトリをキーワードで検索し、結果を閲覧し、任意のリポジトリの詳細ページ（オーナー・言語・Star・Watcher・Fork・Issue）を開けます。Next.js 16 で実装しています。
 
-> A take-home built with a production mindset. This README focuses on the engineering decisions; visual design was out of scope, but readability and ease of use were not.
+> プロダクションを想定して作った課題です。この README は設計上の判断に焦点を当てています。ビジュアルデザインは評価対象外でしたが、見やすさ・操作しやすさは意識しました。
 
-## Features
+## 機能
 
-- Keyword search against the GitHub REST API (`GET /search/repositories`), shown as a results list with infinite scroll.
-- Detail page — a real route, not a modal — for any result: repository name, owner avatar, language, and Star / Watcher / Fork / Issue counts.
-- Routed `ja` / `en` localization and light / dark / system theming.
+- GitHub REST API（`GET /search/repositories`）へのキーワード検索。結果は一覧で表示し、無限スクロールで読み込みます。
+- 各結果の詳細ページ（モーダルではなく独立したルート）— リポジトリ名・オーナーアイコン・言語・Star / Watcher / Fork / Issue 数。
+- ルーティングされた `ja` / `en` の多言語対応と、ライト / ダーク / システムのテーマ。
 
-## Stack
+## 技術スタック
 
-- Next.js 16 (App Router, Turbopack, React Server Components)
-- TypeScript, Tailwind CSS v4, Base UI (unstyled primitives)
-- next-intl — routed `ja` / `en` internationalization
-- next-themes — light / dark / system
-- Biome (lint + format), Vitest + Testing Library + MSW (unit), Playwright (e2e), Storybook (component workshop)
+- Next.js 16（App Router・Turbopack・React Server Components）
+- TypeScript・Tailwind CSS v4・Base UI（スタイルなしのプリミティブ）
+- next-intl — ルーティングされた `ja` / `en` の国際化
+- next-themes — ライト / ダーク / システム
+- Biome（lint + format）・Vitest + Testing Library + MSW（ユニット）・Playwright（e2e）・Storybook（コンポーネントワークショップ）
 - pnpm
 
-## Getting started
+## セットアップ
 
-### Prerequisites
+### 前提
 
-- Node 24+ and pnpm 11+ (or [`mise`](https://mise.jdx.dev) — `mise install` reads `mise.toml`)
+- Node 24 以上・pnpm 11 以上（または [`mise`](https://mise.jdx.dev) — `mise install` が `mise.toml` を読み込みます）
 
-### Install
+### インストール
 
 ```bash
 pnpm install
 ```
 
-### Environment (optional)
+### 環境変数（任意）
 
 ```bash
 cp .env.example .env
 ```
 
-`GITHUB_TOKEN` is optional — the app runs unauthenticated, just at lower GitHub API rate limits. See `.env.example`.
+`GITHUB_TOKEN` は任意です。未設定でも動作し、GitHub API のレート制限が低くなるだけです。`.env.example` を参照してください。
 
-### Run
+### 起動
 
 ```bash
 pnpm dev
 ```
 
-Open <http://localhost:3000> — you're redirected to `/ja` or `/en` based on your browser language.
+<http://localhost:3000> を開くと、ブラウザの言語に応じて `/ja` または `/en` にリダイレクトされます。
 
-### Tests & Storybook
+### テストと Storybook
 
 ```bash
-pnpm test          # unit tests (Vitest + MSW); use pnpm test:watch for watch mode
-pnpm test:e2e      # Playwright e2e — builds the app and runs it against a mock GitHub server
-pnpm storybook     # component workshop at http://localhost:6006
+pnpm test          # ユニットテスト（Vitest + MSW）。監視モードは pnpm test:watch
+pnpm test:e2e      # Playwright の e2e — アプリをビルドし、モックの GitHub サーバーに対して実行
+pnpm storybook     # http://localhost:6006 でコンポーネントワークショップ
 ```
 
-The e2e suite starts its own servers on `:3000` / `:4000`, so stop any running `pnpm dev` first — otherwise Playwright reuses your dev server (which hits the real GitHub API) instead of its mock-backed build.
+e2e は `:3000` / `:4000` で独自のサーバーを起動するため、`pnpm dev` が動いていれば先に止めてください。さもないと Playwright が（実際の GitHub API を叩く）開発サーバーを再利用し、モック前提のビルドを使いません。
 
-## Scripts
+## スクリプト
 
-| Command                         | What it does                  |
-| ------------------------------- | ----------------------------- |
-| `pnpm dev`                      | Dev server                    |
-| `pnpm build` / `pnpm start`     | Production build / serve      |
-| `pnpm lint` / `pnpm fmt`        | Biome check / write           |
-| `pnpm typecheck`                | Route types + `tsc --noEmit`  |
-| `pnpm test` / `pnpm test:watch` | Vitest                        |
-| `pnpm test:e2e`                 | Playwright                    |
-| `pnpm storybook`                | Component workshop on `:6006` |
+| コマンド                        | 内容                                |
+| ------------------------------- | ----------------------------------- |
+| `pnpm dev`                      | 開発サーバー                        |
+| `pnpm build` / `pnpm start`     | 本番ビルド / 配信                   |
+| `pnpm lint` / `pnpm fmt`        | Biome のチェック / 自動修正         |
+| `pnpm typecheck`                | ルート型生成 + `tsc --noEmit`       |
+| `pnpm test` / `pnpm test:watch` | Vitest                              |
+| `pnpm test:e2e`                 | Playwright                          |
+| `pnpm storybook`                | `:6006` でコンポーネントワークショップ |
 
-## Design decisions
+## 設計上の判断
 
-The points I focused on, aiming for a production-ready implementation.
+プロダクション水準を目指して意識したポイントです。
 
-### Architecture
+### アーキテクチャ
 
-- Data is fetched in Server Components, so `GITHUB_TOKEN` never reaches the client; the app also works unauthenticated, just at lower rate limits.
-- I use the native `fetch` rather than a client library like Octokit or axios. It pulls in no extra dependencies (Octokit alone is 16 packages / 7.3 MB; axios is one more package to trust, audit, and patch), and — importantly in Next.js — the framework augments the global `fetch` with the Data Cache, `revalidate`, and cache tags, which an axios or Octokit call would bypass entirely. Neither library gives the runtime validation I want anyway, so I wrap `fetch` in a small client that parses with zod and returns typed results.
-- The data layer is split into a generic transport (`GithubClient.request(path, schema)`) and a domain API (`GithubService.searchRepositories(...)`), so the HTTP and parsing mechanics live in one place and call sites read as plain domain operations.
-- The wire is validated by a hand-written zod schema rather than a generated one (orval / `@octokit/openapi-types`): the official OpenAPI spec is megabytes for the two endpoints and seven fields I actually use, so a focused schema is both leaner and more resilient — it validates only what I read and strips everything else.
-- The app uses the GitHub REST API as the brief specifies, which surfaces a subtle trap: REST's `watchers_count` is aliased to the star count, so the Watcher count is read from `subscribers_count` on the detail endpoint — the obvious field would be wrong.
+- データは Server Components で取得するため、`GITHUB_TOKEN` がクライアントに渡りません。未認証でも（レート制限は低くなりますが）動作します。
+- Octokit や axios のようなクライアントライブラリではなく、素の `fetch` を使っています。依存が増えず（Octokit だけで 16 パッケージ / 7.3 MB、axios も信頼・監査・更新の対象が 1 つ増えます）、さらに Next.js ではフレームワークがグローバルの `fetch` を Data Cache・`revalidate`・キャッシュタグで拡張しており、axios や Octokit の呼び出しはそれを完全にバイパスしてしまいます。どちらも欲しいランタイムバリデーションは提供しないため、`fetch` を薄いクライアントで包み、zod でパースして型付きの結果を返します。
+- データ層は、汎用のトランスポート（`GithubClient.request(path, schema)`）とドメイン API（`GithubService.searchRepositories(...)`）に分割しています。HTTP とパースの仕組みを一箇所にまとめ、呼び出し側は素直なドメイン操作として読めます。
+- ワイヤー形式の検証には、生成物（orval / `@octokit/openapi-types`）ではなく手書きの zod スキーマを使っています。公式の OpenAPI 仕様は、実際に使う 2 エンドポイント・7 フィールドに対して数メガバイトあります。対象を絞った手書きスキーマのほうが軽量で、かつ堅牢です（読み取るフィールドだけを検証し、それ以外は捨てます）。
+- 課題の指定どおり GitHub REST API を使っていますが、ここに微妙な罠があります。REST の `watchers_count` は Star 数のエイリアスなので、Watcher 数は詳細エンドポイントの `subscribers_count` から読み取ります。それらしいフィールドを素直に使うと誤った値になります。
 
-### Use of Next.js
+### Next.js の活用
 
-- Server Components keep the data layer entirely server-side, with zero client JS for fetching.
-- Server Actions (`"use server"`) drive both the infinite-scroll pagination and the cache-busting retry.
-- Streaming with `<Suspense>` shows a skeleton while results load, and keeps the previous results on screen during a new search instead of flashing back to a skeleton.
-- The Data Cache (`revalidate`) plus cache tags and `updateTag` (Next 16) give the retry read-your-own-writes freshness.
-- `generateMetadata` and `generateStaticParams` provide per-locale titles/SEO over statically known locales.
-- `error.tsx` / `not-found.tsx` route conventions handle failure states, `next/image` optimizes avatars, and `next/font` self-hosts fonts with no layout shift.
-- Middleware handles locale routing, `React.cache()` dedupes per-request fetches, and the build runs on Turbopack.
+- Server Components により、データ層は完全にサーバー側で完結し、データ取得のためのクライアント JS はゼロです。
+- Server Actions（`"use server"`）が、無限スクロールの追加読み込みと、キャッシュを破棄する再試行の両方を担います。
+- `<Suspense>` によるストリーミングで、読み込み中はスケルトンを表示しつつ、再検索の間も前の結果を画面に残し、スケルトンに戻って点滅しないようにしています。
+- Data Cache（`revalidate`）とキャッシュタグ・`updateTag`（Next 16）により、再試行で read-your-own-writes な鮮度が得られます。
+- `generateMetadata` と `generateStaticParams` で、静的に既知のロケールに対するロケール別タイトル / SEO を提供します。
+- `error.tsx` / `not-found.tsx` のルート規約で失敗状態を扱い、`next/image` でアバターを最適化し、`next/font` でフォントをセルフホストしてレイアウトシフトを防ぎます。
+- Middleware がロケールルーティングを担い、`React.cache()` がリクエスト単位の取得を重複排除し、ビルドは Turbopack で行います。
 
-### Code style
+### コードスタイル
 
-- No classes for data — functions are grouped as objects-of-closures (a resource's API is one PascalCase namespace object), and mutation is avoided.
-- Strict typing throughout — no `as` casts outside trusted boundaries (JSON, env), no non-null `!`, no `any`; the absent case is always narrowed or handled explicitly.
-- Domain states are discriminated unions consumed with an exhaustive `switch` on the tag plus a `never` default, so an unhandled case is a compile error — my stand-in for pattern matching.
-- The GitHub data layer returns failures as a typed `Result` union — rate-limit, network, timeout, and parse errors are values, not thrown exceptions, and no library error (`ZodError`, a fetch throw) leaks past that boundary.
-- Domain models are pure `readonly` types; the zod schema and its transform live at the boundary (`github.schema.ts`), not on the model — and that boundary is where wire `null` becomes domain `undefined`, so the domain never juggles two kinds of "absent."
-- i18n message keys are type-safe (a missing or mistyped key is a compile error), backed by a `ja` / `en` catalog-parity test — together these make the types themselves a test that catches whole classes of bugs before runtime.
-- Functions read in phases (setup → validate → work → return) separated by blank lines, magic values are named `UPPER_SNAKE_CASE` constants, and filenames are verbose kebab-case with no barrel (`index.ts`) files — one canonical, greppable path per symbol.
+- データにクラスは使いません。関数はオブジェクト＋クロージャでまとめ（リソースの API は 1 つの PascalCase の名前空間オブジェクト）、ミューテーションは避けます。
+- 型付けは厳格に徹底しています。信頼できる境界（JSON・環境変数）以外では `as` キャストを使わず、非 null アサーション `!` も `any` も使わず、「値が無い」場合は常に明示的に絞り込むか処理します。
+- ドメインの状態は判別可能なユニオンで表し、タグに対する網羅的な `switch` と `never` の `default` で消費します。未処理のケースを足すとコンパイルエラーになります — TypeScript におけるパターンマッチの代替です。
+- GitHub データ層は失敗を型付きの `Result` ユニオンで返します。レート制限・ネットワーク・タイムアウト・パースのエラーは例外ではなく「値」であり、ライブラリのエラー（`ZodError` や fetch の throw）が境界の外に漏れません。
+- ドメインモデルは純粋な `readonly` 型です。zod スキーマと変換は（モデルではなく）境界（`github.schema.ts`）に置き、その境界でワイヤーの `null` をドメインの `undefined` に変換するため、ドメインが 2 種類の「無い」を扱うことはありません。
+- i18n のメッセージキーは型安全で（キーの不足やタイポはコンパイルエラー）、`ja` / `en` のカタログ一致テストに支えられています。これらにより、型そのものが多くのバグをランタイム前に捕まえるテストになります。
+- 関数はフェーズ（準備 → 検証 → 処理 → 返却）ごとに空行で区切って読めるようにし、マジック値は `UPPER_SNAKE_CASE` 定数として命名し、ファイル名は冗長な kebab-case で barrel（`index.ts`）を作らず、各シンボルに一意で grep しやすいパスを保ちます。
 
-### Caching
+### キャッシュ
 
-- GitHub responses are cached in the server Data Cache (`revalidate`), and the retry busts that cache via a tag + `updateTag` so it genuinely re-fetches instead of re-serving the stale error.
-- Avatars are cached aggressively — their URLs are content-versioned (`?v=N`), so I set `minimumCacheTTL` to 31 days and let the URL act as the cache-buster.
+- GitHub のレスポンスはサーバーの Data Cache（`revalidate`）にキャッシュし、再試行ではタグ + `updateTag` でそのキャッシュを破棄して、古いエラーを返さず実際に再取得します。
+- アバターは積極的にキャッシュします。URL がコンテンツでバージョン管理されている（`?v=N`）ため、`minimumCacheTTL` を 31 日に設定し、URL 自体をキャッシュバスターとして使います。
 
-### Usability
+### 使いやすさ
 
-- Infinite scroll prefetches eagerly so browsing feels seamless, showing a spinner only when you out-scroll the prefetch, with `overscroll-contain` so a fast flick stops cleanly at the end.
-- Transient errors (rate-limit, network) show the actual cause plus a retry button, instead of a dead-end message.
-- The layout is responsive and mobile-first — the results panel and the four-up stat grid adapt down to small screens.
+- 無限スクロールは先読みを積極的に行い、閲覧がシームレスに感じられるようにします。先読みを追い越したときだけスピナーを出し、`overscroll-contain` で速いフリックでも末尾できっちり止まります。
+- 一時的なエラー（レート制限・ネットワーク）は、行き止まりのメッセージではなく、実際の原因と再試行ボタンを表示します。
+- レイアウトはレスポンシブかつモバイルファーストで、結果パネルと 4 列の統計グリッドが小さい画面にも適応します。
 
-### Security
+### セキュリティ
 
-Supply-chain attacks on npm and GitHub Actions have become routine — compromised maintainer accounts publishing malicious releases, and action tags silently re-pointed at hostile code — so the dependency and CI posture is treated as a production concern, not an afterthought.
+npm や GitHub Actions を狙ったサプライチェーン攻撃は、もはや日常的です（メンテナアカウントの乗っ取りによる悪意あるリリースの公開、タグを密かに悪意あるコードへ再ポイントする手口など）。そのため依存関係と CI の姿勢を、後回しではなくプロダクションの関心事として扱っています。
 
-- A minimal dependency surface is the first line of defense: preferring the platform (`fetch`, `Intl`, `Headers`) over libraries means fewer packages, and fewer packages means fewer ways in.
-- Dependabot runs with a cooldown, so a freshly published release is not pulled in for a day — enough time for a compromised version to surface before it ever reaches the lockfile.
-- GitHub Actions are pinned to commit SHAs rather than moving tags, so a re-pointed tag (the tj-actions class of attack) cannot swap malicious code into CI.
-- Every PR is scanned: OSV-Scanner for known-vulnerable dependencies, zizmor for insecure workflow patterns, and GitGuardian for leaked secrets.
-- At the app level: a strict Content-Security-Policy plus the full security-header set (HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy, X-Content-Type-Options), and the GitHub token stays server-only — never in the client bundle.
+- 最小限の依存が第一の防御線です。ライブラリより（`fetch`・`Intl`・`Headers` といった）プラットフォームを優先し、パッケージが少なければ侵入口も少なくなります。
+- Dependabot はクールダウン付きで動かし、公開されたばかりのリリースを 1 日は取り込みません。乗っ取られたバージョンが lockfile に届く前に表面化する猶予を作ります。
+- GitHub Actions は可動タグではなくコミット SHA で固定しているため、タグの再ポイント（tj-actions 系の攻撃）で CI に悪意あるコードを差し込まれません。
+- すべての PR をスキャンします。既知の脆弱な依存には OSV-Scanner、安全でないワークフローには zizmor、漏洩した秘密情報には GitGuardian。
+- アプリ層では、厳格な Content-Security-Policy とセキュリティヘッダー一式（HSTS・X-Frame-Options・Referrer-Policy・Permissions-Policy・X-Content-Type-Options）を設定し、GitHub トークンはサーバー専用でクライアントバンドルには一切入れません。
 
-### Testing & CI
+### テストと CI
 
-- Tests run in two tiers — unit tests for the logic (with the HTTP boundary mocked via MSW) and Playwright e2e against a real production build that talks to a mock GitHub server with deterministic knobs (`__ratelimit__`, `__empty__`, `__failmore__`).
-- The tests target real logic — the error classifier, the result dedupe, the view-state mapping — rather than library passthrough or framework glue.
-- User-facing behavior is documented as Gherkin-style spec docs in [`docs/test/`](docs/test/) — [search](docs/test/search.md) and [detail](docs/test/detail.md) — with stable `SEARCH-NNN` codes linked to the tests that automate them.
-- Visual components have Storybook stories, test descriptions are written in Japanese to match the product, and CI gates every PR (lint · typecheck · test · build · e2e) alongside security scans (OSV-Scanner, zizmor, GitGuardian).
+- テストは 2 階層です。ロジックのユニットテスト（HTTP 境界は MSW でモック）と、本番ビルドに対する Playwright の e2e で、後者は決定的なフック（`__ratelimit__`・`__empty__`・`__failmore__`）を持つモックの GitHub サーバーに対して実行します。
+- テストは本物のロジック（エラー分類器・結果の重複排除・ビューステート変換）を対象とし、ライブラリの素通しやフレームワークの繋ぎ込みは対象にしません。
+- ユーザー向けの振る舞いは [`docs/test/`](docs/test/) の Gherkin 形式の仕様ドキュメント（[search](docs/test/search.md)・[detail](docs/test/detail.md)）に、安定した `SEARCH-NNN` コードと、それを自動化するテストへのリンク付きで記述しています。
+- ビジュアルコンポーネントには Storybook の story を用意し、テスト名はプロダクトに合わせて日本語で記述し、CI は各 PR をゲート（lint・typecheck・test・build・e2e）しつつセキュリティスキャン（OSV-Scanner・zizmor・GitGuardian）も走らせます。
 
-## Project structure
+## プロジェクト構成
 
 ```
 src/
-├── app/[locale]/        Routes (thin shells); root layout is a passthrough
-├── features/            UI by domain (search, repo-detail, shared)
-├── services/github/     GitHub REST client (transport + operations)
-├── models/              Domain types
-├── config/              Env access (server-only)
-├── i18n/                next-intl routing + request config
-└── lib/                 Generic utilities (cn, formatters)
+├── app/[locale]/        ルート（薄いシェル）。ルートレイアウトはパススルー
+├── features/            ドメイン別の UI（search・repo-detail・shared）
+├── services/github/     GitHub REST クライアント（トランスポート + 操作）
+├── models/              ドメイン型
+├── config/              環境変数アクセス（サーバー専用）
+├── i18n/                next-intl のルーティング + リクエスト設定
+└── lib/                 汎用ユーティリティ（cn・フォーマッタ）
 ```
 
-## AI usage
+## AI の利用について
 
-This project was built with Claude Code, working against the conventions in `.claude/rules/`. The collaboration was deliberately human-steered and commit-by-commit: I made the architectural calls and reviewed every change before it landed.
+本プロジェクトは Claude Code を用い、`.claude/rules/` の規約に沿って実装しました。協働は意図的に人間主導かつコミット単位で進めています。アーキテクチャ上の判断は私が行い、すべての変更を取り込む前にレビューしました。
 
-How I used it. Work was tracked as GitHub issues (via [ghlobes](https://github.com/milkyskies/ghlobes)), one feature per branch with a PR and CI per issue. The agent implemented each chunk — components, the GitHub client, the test suites — and ran the quality gates; I reviewed each commit, ran `/simplify` and `/code-review` passes on the larger changes, and only merged once green.
+私の規約はコード化されており、セッションごとに説明し直すことはありません。`.claude/rules/` に再利用可能なルール一式を用意し、すべてのプロジェクトで使い回しています — コーディングスタイル（クラスを使わない・網羅的な `switch`/`never`・エラーを値として扱う・命名・空行によるフェーズ分け）、テスト戦略、コミット / ブランチ / PR のワークフロー、設定とセキュリティの規約です。エージェントはこれらに沿って作業するため、出力は汎用的なデフォルトではなく私の基準に合い、レビューはセンスを教え直すというより遵守の確認が中心になります。
+
+どのように使ったか。作業は GitHub Issue（[ghlobes](https://github.com/milkyskies/ghlobes) 経由）で管理し、1 機能につき 1 ブランチ・PR・CI としました。エージェントが各単位（コンポーネント・GitHub クライアント・テスト一式）を実装して品質ゲートを走らせ、私が各コミットをレビューし、大きめの変更には `/simplify` と `/code-review` を通し、グリーンになって初めてマージしました。

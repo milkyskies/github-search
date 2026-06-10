@@ -1,4 +1,4 @@
-# 1d-kadai
+# github-search
 
 A GitHub repository search app, built as **two editions of the same product**:
 
