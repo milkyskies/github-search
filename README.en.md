@@ -131,6 +131,16 @@ Supply-chain attacks on npm and GitHub Actions have become routine (compromised 
 - User-facing behavior is documented as Gherkin-style spec docs in [`docs/test/`](docs/test/) ([search](docs/test/search.md) and [detail](docs/test/detail.md)) with stable `SEARCH-NNN` / `DETAIL-NNN` codes linked to the tests that automate them.
 - Visual components have Storybook stories, test descriptions are written in Japanese to match the product, and CI gates every PR (lint · typecheck · test · build · e2e) alongside security scans (OSV-Scanner, zizmor).
 
+## Alternatives
+
+The choices here keep the app to a single, server-rendered Next.js codebase that holds the GitHub token server-side. For a larger or longer-lived product, my usual defaults look different.
+
+- Effect-TS for the functional core: typed errors, `Match` for pattern matching, `@effect/schema` for parsing and encoding, and pipe-based composition. Here a hand-written zod schema plus a small `Result` union covered the two endpoints without pulling Effect in.
+- A decoupled SPA: Vite with TanStack Router and TanStack Query, where TanStack Query owns fetching, caching, and invalidation. Server Components fit better here because they keep the token off the client with no separate backend.
+- A contract-first API client: I usually build a RESTful API, generate its OpenAPI spec from the implementation, and generate a typed client with orval, so the client is derived from the contract rather than hand-written. For two GitHub endpoints, a focused hand-written schema was leaner.
+
+The throughline is keeping concerns separate and not framework-locked: a contract-first frontend and backend I can move between frameworks. I went the other way here, one cohesive Next.js app, because it keeps the token server-side with the least machinery.
+
 ## Project structure
 
 ```
