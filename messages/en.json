@@ -32,6 +32,7 @@
 		"error": {
 			"rateLimited": "GitHub's rate limit was reached. Please try again in a moment.",
 			"network": "Couldn't reach GitHub. Check your connection and try again.",
+			"invalidQuery": "That request isn't valid.",
 			"generic": "Something went wrong. Please try again.",
 			"retry": "Try again"
 		}

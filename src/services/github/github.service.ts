@@ -1,3 +1,4 @@
+import { cache } from "react"
 import type { RepositoryDetail } from "@/models/repository"
 import { GithubClient } from "./github.client"
 import type { GithubResult } from "./github.errors"
@@ -20,11 +21,11 @@ export const GithubService = {
 		})
 	},
 
-	getRepository(owner: string, repo: string): Promise<GithubResult<RepositoryDetail>> {
+	getRepository: cache((owner: string, repo: string): Promise<GithubResult<RepositoryDetail>> => {
 		const path = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`
 
 		return GithubClient.request(path, repositoryDetailSchema, {
 			revalidate: DETAIL_REVALIDATE_SECONDS,
 		})
-	},
+	}),
 }
