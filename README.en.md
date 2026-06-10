@@ -101,7 +101,8 @@ The points I focused on, aiming for a production-ready implementation.
 - The GitHub data layer returns failures as a typed `Result` union: rate-limit, network, timeout, and parse errors are values, not thrown exceptions, and no library error (`ZodError`, a fetch throw) leaks past that boundary.
 - Domain models are pure `readonly` types; the zod schema and its transform live at the boundary (`github.schema.ts`), not on the model, and that boundary is where wire `null` becomes domain `undefined`, so the domain never juggles two kinds of "absent."
 - i18n message keys are type-safe (a missing or mistyped key is a compile error), backed by a `ja` / `en` catalog-parity test; together these make the types themselves a test that catches whole classes of bugs before runtime.
-- Functions read in phases (setup → validate → work → return) separated by blank lines, magic values are named `UPPER_SNAKE_CASE` constants, and filenames are verbose kebab-case with no barrel (`index.ts`) files, giving one canonical, greppable path per symbol.
+- Functions read in phases (setup → validate → work → return) separated by blank lines, and magic values are named `UPPER_SNAKE_CASE` constants.
+- Files stay relatively flat with verbose, self-describing kebab-case names (`github.service.ts`, not a bare `service.ts` buried in folders) and no barrel (`index.ts`) files. I navigate by fuzzy file search rather than folder browsing, so each name should be unique and greppable on its own, and one symbol maps to exactly one path.
 
 ### Caching
 
